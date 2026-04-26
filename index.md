@@ -46,30 +46,6 @@ curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
 
 **Lifetime Pro: $200**
 
-## Documentation
-
-| Document | Description |
-|:---------|:------------|
-| [User Guide](user-guide) | Installation, every screen, every button — with annotated screenshots |
-| [E2E Testing](e2e-testing) | Docker E2E, stress tests, Playwright suites |
-| [Release Checklist](release-checklist) | Build, sign, deploy, verify procedure |
-
-## Usage
-
-```bash
-# Desktop (auto-launches GUI)
-clipshot
-
-# Headless daemon
-clipshot daemon --port 19231 --http-port 18080
-
-# CLI commands
-clipshot pair WORD-WORD-00      # Pair with another device
-clipshot share-uri              # Generate share link
-clipshot push "hello"           # Send text to peers
-clipshot history                # Show sync history
-```
-
 ## Screenshots
 
 ![Overview](docs/images/overview.png)
