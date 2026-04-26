@@ -1,6 +1,6 @@
 title: Clipshot Docs
 description: Cross-platform P2P clipboard sync documentation
-url: https://docs.clipshot.cc
-baseurl: ""
+url: https://axelbaumlisto.github.io
+baseurl: /clipshot
 theme: jekyll-theme-minimal
 show_downloads: false
