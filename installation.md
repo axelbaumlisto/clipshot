@@ -16,8 +16,10 @@ The fastest way to add a new Linux or macOS device is:
 3. On the new device, run:
 
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=YOUR-PAIR-CODE
 ```
+
+Replace `YOUR-PAIR-CODE` with the code from step 2.
 
 What the installer does:
 - downloads the correct binary for your OS and CPU
@@ -52,14 +54,11 @@ If you prefer to build Clipshot yourself:
 ```bash
 git clone <repo>
 cd clipshot
-cd web
-bun install
-bun run build
-cd ..
+cd web && bun install && bun run build && cd ..
 cargo build --release
 ```
 
-Headless build without the GUI:
+Headless build (no GUI):
 
 ```bash
 cargo build --release --no-default-features --features iroh

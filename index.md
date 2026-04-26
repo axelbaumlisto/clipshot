@@ -23,7 +23,7 @@ curl -fsSL https://clipshot.cc/install.sh | bash
 After install, pair with another device:
 
 ```bash
-clipshot pair WORD-WORD-00
+clipshot pair YOUR-PAIR-CODE
 ```
 
 Or open the GUI → **Pair device** → enter the code.

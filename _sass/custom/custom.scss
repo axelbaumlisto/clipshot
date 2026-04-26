@@ -96,3 +96,13 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #09090b; }
 ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; &:hover { background: #3f3f46; } }
+
+/* Compact code blocks */
+.main-content pre {
+  padding: 10px 14px !important;
+  line-height: 1.4 !important;
+}
+.main-content pre code {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
