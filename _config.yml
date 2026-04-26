@@ -1,17 +1,6 @@
 title: Clipshot Docs
 description: Cross-platform P2P clipboard sync documentation
-url: https://clipshot1.github.io
-baseurl: /clipshot
-remote_theme: just-the-docs/just-the-docs
-color_scheme: dark
-search_enabled: true
-nav_sort: case_insensitive
-heading_anchors: true
-back_to_top: true
-back_to_top_text: "↑ Top"
-footer_content: '<a href="https://clipshot.cc">clipshot.cc</a> • <a href="mailto:contact@clipshot.cc">contact@clipshot.cc</a>'
-aux_links:
-  "Download":
-    - "https://clipshot.cc/#download"
-  "GitHub":
-    - "https://github.com/clipshot1/clipshot"
+url: https://docs.clipshot.cc
+baseurl: ""
+theme: jekyll-theme-minimal
+show_downloads: false
