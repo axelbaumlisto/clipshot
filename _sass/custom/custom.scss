@@ -1,0 +1,133 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: #09090b;
+  color: #d4d4d8;
+}
+
+.site-header,
+.side-bar,
+.main,
+.search-input-wrap,
+.search-results {
+  background: #09090b;
+}
+
+.site-title,
+.navigation a,
+.search-input,
+.main-content,
+.main-content-wrap {
+  color: #d4d4d8;
+}
+
+.site-button,
+.nav-list .nav-list-item .nav-list-link,
+.breadcrumb-nav,
+.breadcrumb-nav-list-item,
+.main-content a,
+.search-result-doc .search-result-rel-url {
+  color: #10b981;
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6,
+.site-title {
+  color: #fafafa;
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3 {
+  border-bottom-color: #27272a;
+}
+
+.nav-list .nav-list-item .nav-list-link.active,
+.nav-list .nav-list-item .nav-list-expander:hover,
+.nav-list .nav-list-item .nav-list-link:hover,
+.site-button:hover,
+.search-input:focus {
+  background-image: none;
+  background-color: rgba(16, 185, 129, 0.12);
+}
+
+.search-input,
+.search-results,
+.main-content pre,
+.main-content code,
+.main-content table,
+.main-content th,
+.main-content td,
+.main-content blockquote {
+  border-color: #27272a;
+}
+
+.main-content code {
+  background: #18181b;
+  color: #10b981;
+}
+
+.main-content pre {
+  background: #18181b;
+  border-radius: 10px;
+}
+
+.main-content pre code {
+  color: #d4d4d8;
+}
+
+.main-content table {
+  display: table;
+}
+
+.main-content th {
+  background: #18181b;
+  color: #fafafa;
+}
+
+.main-content td {
+  background: #09090b;
+}
+
+.main-content img {
+  display: block;
+  max-width: min(100%, 860px);
+  height: auto;
+  margin: 1rem 0 1.25rem;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+}
+
+.main-content .img-narrow {
+  max-width: 300px;
+}
+
+.main-content .img-dialog {
+  max-width: 700px;
+}
+
+.main-content .img-wide {
+  max-width: 900px;
+}
+
+.btn-primary {
+  background: #10b981;
+  border-color: #10b981;
+  color: #09090b !important;
+}
+
+.btn-primary:hover {
+  background: #34d399;
+  border-color: #34d399;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.30);
+  color: #ecfdf5;
+}
