@@ -8,10 +8,9 @@ nav_order: 1
 
 **Cross-platform P2P clipboard sync** — copy on one device, paste on another.
 
-{: .fs-6 .fw-300 }
+---
 
-[Download](https://clipshot.cc/#download){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[Get Started](getting-started){: .btn .fs-5 .mb-4 .mb-md-0 }
+[Download](https://clipshot.cc/#download){: .btn } [Get Started](getting-started){: .btn } [User Guide](user-guide){: .btn }
 
 ---
 
@@ -31,7 +30,7 @@ nav_order: 1
 ## Platforms
 
 - **macOS** — Intel and Apple Silicon (GUI + CLI)
-- **Linux** — x64 (GUI + headless + WSL)  
+- **Linux** — x64 (GUI + headless + WSL)
 - **Windows** — x64 (GUI + NSIS installer)
 
 ## Quick Links
