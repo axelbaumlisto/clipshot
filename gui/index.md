@@ -8,7 +8,7 @@ Clipshot uses the same application shell across desktop and browser mode.
 
 Read these pages in order if you want a screen-by-screen tour:
 
-- [Overview](overview/)
-- [Peers](peers/)
-- [History](history/)
-- [Settings](settings/)
+- [Overview](overview.html)
+- [Peers](peers.html)
+- [History](history.html)
+- [Settings](settings.html)

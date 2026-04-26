@@ -6,7 +6,7 @@ nav_order: 1
 Clipshot keeps text, images, and files moving between your own devices without a central storage account.
 
 [Download](https://clipshot.cc/#download){: .btn .btn-primary }
-[Installation](installation/){: .btn }
+[Installation](installation.html){: .btn }
 [Application guide](gui/){: .btn }
 
 ## Quick start
@@ -34,10 +34,10 @@ Clipshot is a peer-to-peer clipboard sync app for your own devices. It keeps tex
 
 ## Read next
 
-- [Installation & first launch](installation/)
-- [Overview page](gui/overview/)
-- [Peers page](gui/peers/)
-- [How sync works](features/sync/)
-- [Troubleshooting](troubleshooting/)
+- [Installation & first launch](installation.html)
+- [Overview page](gui/overview.html)
+- [Peers page](gui/peers.html)
+- [How sync works](features/sync.html)
+- [Troubleshooting](troubleshooting.html)
 
 <img src="docs/images/overview.png" alt="Overview page" class="img-wide">
