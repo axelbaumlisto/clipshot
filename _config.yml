@@ -1,7 +1,7 @@
 title: Clipshot
 description: P2P clipboard sync documentation
-url: https://axelbaumlisto.github.io
-baseurl: /clipshot
+url: https://docs.clipshot.cc
+baseurl: ""
 remote_theme: just-the-docs/just-the-docs@v0.10.0
 plugins:
   - jekyll-remote-theme
