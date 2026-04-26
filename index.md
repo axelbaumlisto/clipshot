@@ -3,41 +3,62 @@ layout: default
 title: Home
 nav_order: 1
 ---
-Clipshot keeps text, images, and files moving between your own devices without a central storage account.
+
+# Clipshot
+
+**P2P clipboard sync across all your devices.** Copy on one — paste on another. Encrypted, no cloud, no accounts.
 
 [Download](https://clipshot.cc/#download){: .btn .btn-primary }
-[Installation](installation.html){: .btn }
-[Application guide](gui/){: .btn }
+[Installation](installation){: .btn }
+[User Guide](gui/){: .btn }
 
-## Quick start
+---
+
+## Install
 
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
+curl -fsSL https://clipshot.cc/install.sh | bash
 ```
 
-1. On a device that is already connected, open **Pair device** or run `clipshot pair`.
-2. Generate a **Pair Code**.
-3. Run the installer on the new device.
-4. After pairing, Clipshot opens the full dashboard and keeps syncing automatically.
+After install, pair with another device:
 
-## What is Clipshot
+```bash
+clipshot pair WORD-WORD-00
+```
 
-Clipshot is a peer-to-peer clipboard sync app for your own devices. It keeps text, images, and files moving between your laptop, desktop, and servers without a central storage account.
+Or open the GUI → **Pair device** → enter the code.
 
-## What you can do
+---
 
-- Sync text, images, and files across your own devices
-- Pair new machines with a short **Pair Code**
-- Run a desktop GUI, a browser UI, or a headless daemon
-- Catch up after reconnects instead of recopied clipboard items
-- Use direct peer-to-peer transport with relay fallback when needed
+## Features
 
-## Read next
+- **Instant sync** — text, images, files between your devices
+- **P2P encrypted** — data goes directly between devices, never through a server
+- **Cross-platform** — macOS, Linux, Windows, headless servers, WSL
+- **Pair codes** — add a new device in seconds
+- **Catch-up** — missed syncs delivered on reconnect
+- **GUI + CLI** — desktop app with tray icon, or headless daemon
 
-- [Installation & first launch](installation.html)
-- [Overview page](gui/overview.html)
-- [Peers page](gui/peers.html)
-- [How sync works](features/sync.html)
-- [Troubleshooting](troubleshooting.html)
+---
 
-<img src="docs/images/overview.png" alt="Overview page" class="img-wide">
+## Pages
+
+| | |
+|:--|:--|
+| [Installation](installation) | Install, pair, first launch |
+| [Overview](gui/overview) | Dashboard, devices, activity |
+| [Peers](gui/peers) | Add, remove, manage devices |
+| [History](gui/history) | Sync timeline, transfers |
+| [Settings](gui/settings) | Configuration options |
+| [How sync works](features/sync) | Clipboard → peers → file |
+| [Discovery](features/discovery) | How devices find each other |
+| [Hotkeys](features/hotkeys) | Keyboard shortcuts, tray menu |
+| [CLI](cli) | Headless daemon, commands |
+| [Pricing](pricing) | Lite vs Pro |
+| [API](api) | HTTP API reference |
+| [FAQ](faq) | Common questions |
+| [Troubleshooting](troubleshooting) | Fix common issues |
+
+---
+
+![Overview](docs/images/overview.png)
