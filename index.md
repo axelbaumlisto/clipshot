@@ -1,42 +1,49 @@
 ---
 layout: default
 title: Home
-nav_order: 1
 ---
 
-# Clipshot Documentation
+# Clipshot
 
-**Cross-platform P2P clipboard sync** — copy on one device, paste on another.
+**P2P mesh clipboard sync across all your devices.** Copy on one — paste on another.
+
+[Download](https://clipshot.cc/#download){: .btn .btn-green }
+[User Guide](user-guide){: .btn }
+[GitHub](https://github.com/axelbaumlisto/clipshot){: .btn }
 
 ---
 
-[Download](https://clipshot.cc/#download){: .btn } [Get Started](getting-started){: .btn } [User Guide](user-guide){: .btn }
+## Quick Start
 
----
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
+```
+
+**Pair two devices:**
+1. On device A: open GUI → Pair Device → Generate Code
+2. On device B: enter the code
+3. Done — clipboards sync automatically
 
 ## Features
 
-| Feature | Lite (Free) | Pro ($5/mo) |
-|:--------|:----------:|:-----------:|
+- **Automatic clipboard sync** — text, images, files
+- **P2P mesh** — direct QUIC connections, no cloud
+- **GUI + CLI** — desktop app or headless daemon
+- **Hub discovery** — devices find each other automatically
+- **Pair codes** — zero-config pairing
+- **Catch-up sync** — missed syncs delivered on reconnect
+- **Cross-platform** — macOS, Linux, Windows
+
+## Pricing
+
+| | Lite (Free) | Pro ($5/mo) |
+|:--|:--:|:--:|
 | Devices | 2 | Unlimited |
-| Local network sync | ✅ | ✅ |
+| Local sync | ✅ | ✅ |
 | Relay transport | — | ✅ |
-| Clipboard history | ✅ | ✅ |
+| History | ✅ | ✅ |
 | Auto-update | ✅ | ✅ |
-| Priority support | — | ✅ |
 
-**Lifetime Pro: $200** — one-time purchase, everything in Pro forever.
+**Lifetime Pro: $200**
 
-## Platforms
-
-- **macOS** — Intel and Apple Silicon (GUI + CLI)
-- **Linux** — x64 (GUI + headless + WSL)
-- **Windows** — x64 (GUI + NSIS installer)
-
-## Quick Links
-
-- [Installation](getting-started#installation)
-- [Pairing Devices](getting-started#pairing)
-- [User Guide](user-guide)
-- [FAQ](faq)
-- [Changelog](changelog)
+![Overview](docs/images/overview.png)

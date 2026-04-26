@@ -1,7 +1,6 @@
 ---
 layout: default
 title: User Guide
-nav_order: 3
 ---
 
 # Clipshot — User Guide
@@ -90,7 +89,7 @@ If Clipshot has no group token yet, it opens the **Welcome Screen** instead of t
 
 ### Welcome Screen
 
-![Welcome Screen](assets/images/welcome.png)
+![Welcome Screen](images/welcome.png)
 
 The Welcome Screen shows:
 - a short 3-step intro: **Pair → Connect → Sync**
@@ -98,7 +97,7 @@ The Welcome Screen shows:
 - a collapsible section: **Enter token manually**
 - a link: **Open Settings**
 
-![Welcome Screen annotated](assets/images/welcome-annotated.png)
+![Welcome Screen annotated](images/welcome-annotated.png)
 
 The callouts above show: ① **Pair with another device** — the recommended way to join. ② **Enter token manually** — expand to paste an existing group token. ③ **Open Settings** — access settings before connecting.
 
@@ -133,7 +132,7 @@ If you already have a group token:
 
 ## Overview Page
 
-![Overview page](assets/images/overview.png)
+![Overview page](images/overview.png)
 
 After pairing, the main window has:
 - a left sidebar with **Overview**, **Peers**, **History**, **Settings**
@@ -145,21 +144,21 @@ The sidebar can be collapsed and expanded.
 
 ### Sidebar
 
-![Sidebar](assets/images/sidebar.png)
+![Sidebar](images/sidebar.png)
 
-![Sidebar annotated](assets/images/sidebar-annotated.png)
+![Sidebar annotated](images/sidebar-annotated.png)
 
 The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**). ② **Pair device** button — opens the Add Device dialog from any page. ③ Navigation links: **Overview**, **Peers**, **History**, **Settings**. The active page is highlighted with a left border.
 
 ### Header Bar
 
-![Header bar](assets/images/header-bar.png)
+![Header bar](images/header-bar.png)
 
-![Header bar annotated](assets/images/header-bar-annotated.png)
+![Header bar annotated](images/header-bar-annotated.png)
 
 The header bar shows: ① Sync status pill (**Ready**, **Sending**, **Receiving**, **No peers**, or **Paused**). ② **Pause** / **Resume** button. ③ Peer count badge showing connected devices. A theme toggle icon appears to the right.
 
-![Overview page annotated](assets/images/overview-annotated.png)
+![Overview page annotated](images/overview-annotated.png)
 
 The annotated view highlights: ① Status hero card — your network health at a glance. ② Last Synced — your most recent transfer. ③ Devices — connected peer badges. ④ Recent Activity — latest events. ⑤ Node details — collapsible technical info.
 
@@ -242,11 +241,11 @@ It shows:
 
 ## Peers Page
 
-![Peers page](assets/images/peers.png)
+![Peers page](images/peers.png)
 
 The Peers page is where you add, view, pin, reconnect, disconnect, and remove devices.
 
-![Peers page annotated](assets/images/peers-annotated.png)
+![Peers page annotated](images/peers-annotated.png)
 
 The annotated view highlights: ① **Search devices...** field — search by name or node ID. ② Filter buttons with counts: **All**, **Connected**, **Offline**, **Pinned**. ③ Device card — shows name, status, transport, latency, and actions. ④ **Add Device** button — opens the pairing dialog.
 
@@ -333,11 +332,11 @@ All of them open the same add-device dialog.
 
 #### Pair Code
 
-![Add Device — Pair Code tab](assets/images/add-device-pair.png)
+![Add Device — Pair Code tab](images/add-device-pair.png)
 
 This is the recommended method.
 
-![Add Device — Pair Code annotated](assets/images/add-device-pair-annotated.png)
+![Add Device — Pair Code annotated](images/add-device-pair-annotated.png)
 
 The callouts show: ① **Generate Code** — creates a short code valid for 5 minutes. ② Code input field — enter a code from another device, then click **Join**. ③ **Advanced** — expand for Paste Link and Manual Entry options.
 
@@ -357,7 +356,7 @@ Use Pair Code when:
 
 #### Local Network Scan
 
-![Add Device — Local Network tab](assets/images/add-device-discover.png)
+![Add Device — Local Network tab](images/add-device-discover.png)
 
 The **Local Network** tab scans your LAN with mDNS.
 
@@ -440,11 +439,11 @@ To temporarily stop a connected device without deleting it:
 
 ## History Page
 
-![History page](assets/images/history.png)
+![History page](images/history.png)
 
 History is a unified timeline of transfers and peer activity.
 
-![History page annotated](assets/images/history-annotated.png)
+![History page annotated](images/history-annotated.png)
 
 The annotated view highlights: ① **Search files, peers...** field — search by filename, peer name, or content type. ② Filter chips: **All**, **Transfers**, **Events**, **Failed** with counts. ③ Transfer row — shows file, peer, direction, type badge, size, and time. ④ **TODAY** date header — sticky headers group entries by day.
 
@@ -512,11 +511,11 @@ Each row includes:
 
 ## Settings Page
 
-![Settings page](assets/images/settings.png)
+![Settings page](images/settings.png)
 
 The Settings page is split into collapsible cards. Clipshot remembers which sections you keep open or closed.
 
-![Settings page annotated](assets/images/settings-annotated.png)
+![Settings page annotated](images/settings-annotated.png)
 
 The annotated view highlights: ① **Connection** card — Hub Portal URL, Group Token, subscription info. ② **General** card — theme, startup, notifications, hotkey. ③ **Save Changes** / **Reset to Defaults** buttons at the bottom.
 
