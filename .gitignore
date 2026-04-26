@@ -1,0 +1,7 @@
+# No source code in this repo
+*.rs
+*.tsx
+*.ts
+src/
+target/
+node_modules/
