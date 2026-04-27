@@ -110,7 +110,6 @@ Inside the dialog:
   - the code itself
   - **Valid for 5 minutes**
   - a copyable CLI command
-  - a copyable one-line install command
 
 Use Pair Code when:
 - adding your own laptop or phone-sized desktop companion

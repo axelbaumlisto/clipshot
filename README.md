@@ -8,7 +8,7 @@ One binary works everywhere: desktop GUI with system tray, headless CLI daemon, 
 
 ```bash
 # Install on any machine (Linux/macOS)
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
+curl -fsSL https://clipshot.cc/install.sh | bash
 
 # Or download binary from https://clipshot.cc/dist/
 ```
@@ -17,6 +17,11 @@ curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
 1. On device A: open GUI → Pair Device → Generate Code
 2. On device B: enter the code (GUI or `clipshot pair WORD-WORD-00`)
 3. Done — clipboards sync automatically
+
+**Or create a new account:**
+```bash
+clipshot setup   # opens browser for registration
+```
 
 ## Features
 

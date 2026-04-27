@@ -73,6 +73,15 @@ What they mean:
 
 If you set a very large file limit, Clipshot warns that large files may time out.
 
+### Storage (sync file retention)
+
+The **Storage** card includes:
+- **Max files** — maximum number of files to keep in the sync directory (0 = unlimited)
+- **Max age (days)** — delete synced files older than this many days (0 = unlimited)
+- **Max size (MB)** — maximum total size of the sync directory (0 = unlimited)
+
+These settings control automatic cleanup of `~/.clipshot/sync/`.
+
 ### Network (listen_port, max_peers)
 
 The **Network** card includes:

@@ -125,6 +125,7 @@ Fields returned by `GET /api/peers` and Tauri `get_peers`:
 | GET | `/assets/*` | – | embedded static asset or `404 text/plain` |
 | GET | `/health` | – | `{"status":"ok"}` |
 | GET | `/api/icon.png` | – | PNG chosen from current global sync state |
+| GET | `/api/permissions` | – | `ApiResponse<PermissionInfo[]>` (macOS Input Monitoring etc.) |
 | OPTIONS | any API path | – | `204` + CORS headers |
 
 ### Status / activity / share routes

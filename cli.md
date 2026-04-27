@@ -62,6 +62,19 @@ Show recent sync history:
 clipshot history
 ```
 
+Set up a new account (opens browser for registration):
+
+```bash
+clipshot setup
+```
+
+Check for or install updates:
+
+```bash
+clipshot update
+clipshot update --check
+```
+
 Other useful CLI commands:
 
 ```bash

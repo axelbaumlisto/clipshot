@@ -17,7 +17,7 @@ Clipshot supports macOS, Linux, and Windows. Desktop builds provide the full GUI
 
 ## How do I pair a new device?
 
-The recommended path is **Pair Code**. On an existing device, open **Pair device** and generate a code. On the new device, enter that code in the welcome screen or run the one-line installer with `--code=WORD-WORD-00`.
+The recommended path is **Pair Code**. On an existing device, open **Pair device** and generate a code. On the new device, enter that code in the welcome screen or run `clipshot pair WORD-WORD-00`. You can also create a new account without a pair code by running `clipshot setup` or clicking **Create Account** on the Welcome Screen.
 
 ## Can I use Clipshot on a headless server?
 

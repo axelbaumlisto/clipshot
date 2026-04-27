@@ -22,6 +22,7 @@ The tray icon tooltip is **Clipshot - P2P Clipboard Sync**.
 
 Tray menu items:
 - **Open Dashboard**
+- **Copy Last Synced**
 - **Toggle Sync**
 - **Upgrade to Pro** on Lite plans
 - **Quit**
@@ -37,6 +38,8 @@ On macOS, the Dock icon has its own menu:
 - **Toggle Sync**
 - separator
 - **Quit**
+
+Note: the Dock menu does not include **Copy Last Synced** or **Upgrade to Pro**.
 
 ### Dock Progress Bar
 
