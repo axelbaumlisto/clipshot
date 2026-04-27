@@ -251,3 +251,22 @@ Routes:
 | GET | `/api/test/native_key_events` | – | captured native key event snapshot |
 | POST | `/api/test/native_key_events` | – | clears captured native key events |
 | POST | `/api/test/hotkey_toggle` | optional `X-Clipshot-Source` header | emits `hotkey-toggle-sync` into app event loop |
+
+### Setup sessions (device auth flow)
+
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/api/setup/sessions` | – | `{ session_id, url, expires_in }` |
+| GET | `/api/setup/sessions/:id` | – | `{ status: "pending"\|"completed"\|"expired", group_token? }` |
+| POST | `/api/setup/sessions/:id/complete` | `{ group_token }` (requires JWT) | `200` |
+
+Used by `curl | bash` install script and GUI "Create Account" button. Session expires in 10 minutes.
+
+### OAuth
+
+| Method | Path | Notes |
+|---|---|---|
+| GET | `/api/auth/google` | Redirect to Google OAuth. Optional `?state=SESSION_ID` for device auth. |
+| GET | `/api/auth/google/callback` | Google callback — creates/finds user, issues JWT. |
+| GET | `/api/auth/github` | Redirect to GitHub OAuth. |
+| GET | `/api/auth/github/callback` | GitHub callback. |

@@ -103,3 +103,12 @@ This file stores known/saved peers.
 ### HMAC secret: `~/.config/clipshot/hmac_secret`
 
 This secret is used to validate Clipshot share links.
+
+### Iroh not starting (no peers connecting)
+
+If you see `Cannot connect to iroh peer: iroh not started` in logs, check that `enable_iroh` is not set to `false` in your `settings.toml`. The default is `true` — if the field is missing, iroh starts normally. Only set it explicitly if you want to disable iroh transport.
+
+```toml
+# settings.toml — remove this line or set to true
+enable_iroh = true
+```

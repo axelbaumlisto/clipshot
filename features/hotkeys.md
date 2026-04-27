@@ -75,3 +75,7 @@ Button behavior:
 - when sync is active, the button says **Pause**
 - when sync is paused, the button says **Resume**
 - when the state is **No peers**, only the status pill is shown
+
+### Clipboard Toggle Hotkey
+
+Default: **Ctrl+A** — toggles clipboard between image/file content and the sync file path. Useful for pasting images directly into chat apps. Change in Settings → General → Clipboard Toggle Hotkey.

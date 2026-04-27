@@ -130,3 +130,7 @@ If you already have a group token:
 2. Paste your token, usually starting with `clip_`.
 3. Click **Save token**.
 4. Clipshot restarts and opens the normal app.
+
+### Multiple groups
+
+If your account has more than one group, the setup page will show a group picker — choose which group the new device should join. If you have only one group, it is selected automatically.

@@ -38,3 +38,7 @@ If you installed Clipshot as a service, run `clipshot service uninstall`. Then r
 ## Where are my synced files and settings stored?
 
 Synced files live in `~/.clipshot/sync/`. Settings usually live in `~/.config/clipshot/settings.toml` or the platform-equivalent app config directory.
+
+### Can I use Clipshot over Tailscale or WireGuard?
+
+Yes. If your devices share a VPN network (Tailscale, WireGuard, ZeroTier), Clipshot will connect through it automatically — even on the free plan. No relay needed, no extra config. Clipshot detects all network interfaces including VPN IPs.
