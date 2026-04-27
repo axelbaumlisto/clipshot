@@ -28,10 +28,11 @@ What the installer does:
 2. installs it to `~/.local/bin` and adds it to your PATH
 3. pre-configures `~/.config/clipshot/settings.toml` with the hub and relay URLs
 4. authenticates — opens browser for device auth **or** pairs with `--code`
-5. installs a background service (systemd user service on Linux, launchd agent on macOS)
+5. installs a background service with auto-start on boot (systemd on Linux, launchd on macOS)
 6. starts the daemon and verifies the connection
+7. enables PID lock — only one daemon instance can run at a time
 
-Other installer options: `--port=PORT`, `--hub=URL`.
+Other installer options: `--port=PORT`, `--hub=URL`, `--no-autostart`.
 
 Supported platforms:
 - Linux
@@ -40,6 +41,26 @@ Supported platforms:
 For Windows, use the binary download method below.
 
 If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair WORD-WORD-00` to join an existing group, then `clipshot service install` to set up auto-start.
+
+### Auto-start behavior
+
+By default, Clipshot starts automatically on boot:
+
+| Install method | Linux | macOS | Windows |
+|---|---|---|---|
+| **One-liner** (`curl \| bash`) | systemd user service + linger | launchd agent (RunAtLoad + KeepAlive) | — |
+| **GUI app** | `.desktop` in `~/.config/autostart/` | Login Items (via System Events) | — |
+| **Manual binary** | run `clipshot service install` | run `clipshot service install` | manual |
+
+To skip auto-start during install:
+
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --no-autostart
+```
+
+To toggle auto-start from the GUI, go to **Settings → General → Start at login**.
+
+**PID lock**: only one daemon can run at a time. If you try to start a second instance, it will exit with "Another clipshot daemon is already running".
 
 ### Download binary
 

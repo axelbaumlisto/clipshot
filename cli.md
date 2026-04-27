@@ -129,7 +129,7 @@ clipshot completions fish > ~/.config/fish/completions/clipshot.fish
 
 ### systemd / launchd auto-start
 
-Install Clipshot as a background service:
+Install Clipshot as a background service that starts on boot:
 
 ```bash
 clipshot service install --port 19231 --http-port 18080
@@ -144,6 +144,8 @@ clipshot service uninstall
 ```
 
 Notes:
-- Linux uses a **systemd user service**
-- macOS uses a **launchd agent**
-- the one-line installer sets this up automatically for you
+- Linux uses a **systemd user service** (`~/.config/systemd/user/clipshot.service`) with `Restart=always` and `loginctl enable-linger`
+- macOS uses a **launchd agent** (`~/Library/LaunchAgents/cc.clipshot.daemon.plist`) with `RunAtLoad` and `KeepAlive`
+- the one-line installer sets this up automatically (skip with `--no-autostart`)
+- a **PID lock** (`~/.config/clipshot/daemon.lock`) prevents duplicate daemon instances
+- auto-start is **enabled by default** — toggle it in Settings or with `clipshot service uninstall`
