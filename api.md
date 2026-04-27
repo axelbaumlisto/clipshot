@@ -270,3 +270,5 @@ Used by `curl | bash` install script and GUI "Create Account" button. Session ex
 | GET | `/api/auth/google/callback` | Google callback — creates/finds user, issues JWT. |
 | GET | `/api/auth/github` | Redirect to GitHub OAuth. |
 | GET | `/api/auth/github/callback` | GitHub callback. |
+
+**Note:** OAuth and setup session routes above are **Portal-side** endpoints (clipshot.cc), not local daemon HTTP API routes. The local daemon serves routes like `/api/status`, `/api/peers`, etc.
