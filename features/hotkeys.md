@@ -23,7 +23,7 @@ The tray icon tooltip is **Clipshot - P2P Clipboard Sync**.
 Tray menu items:
 - **Open Dashboard**
 - **Copy Last Synced**
-- **Toggle Sync**
+- **Pause Sync** / **Resume Sync** — label changes dynamically
 - **Upgrade to Pro** on Lite plans
 - **Quit**
 

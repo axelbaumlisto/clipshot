@@ -21,15 +21,15 @@ The recommended path is **Pair Code**. On an existing device, open **Pair device
 
 ## Can I use Clipshot on a headless server?
 
-Yes. Start it with `clipshot daemon --port 19231` and use `clipshot pair WORD-WORD-00` or `clipshot add-uri 'clipshot://node/...'` to join the mesh. Service management is available with `clipshot service install`.
+Yes. Start it with `clipshot daemon --port 19231` and use `clipshot pair WORD-WORD-00` or `clipshot add-uri 'clipshot://node/...'` to join the mesh. Service management is available with `clipshot service install`. Run `clipshot doctor` to verify that the daemon, peers, and hub connection are healthy.
 
 ## What is the difference between Lite and Pro?
 
-Lite is free and supports up to 2 devices with local sync and history. Pro removes the device cap, enables relay transport, and includes everything in Lite. A Lifetime Pro option is also available.
+Lite is free and supports up to 2 active peer connections (so you can sync between up to 3 devices total). It includes local sync and clipboard history. Pro removes the peer limit, enables relay transport for syncing across different networks, and includes everything in Lite. A Lifetime Pro option is also available.
 
 ## How do updates work?
 
-Desktop builds can prompt for updates in-app. CLI and headless installs can check or install updates with `clipshot update` when the updater is available. Re-running the install flow is also a safe fallback for installer-based setups.
+Desktop builds can prompt for updates in-app. CLI and headless installs can run `clipshot update` to check clipshot.cc for a newer release and install it, or `clipshot update --check` to only check availability. Re-running the install script is also a safe way to update installer-based setups.
 
 ## How do I uninstall Clipshot?
 

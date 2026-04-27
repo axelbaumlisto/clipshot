@@ -9,12 +9,12 @@ Lite is the free plan.
 
 What you get:
 - up to **2 devices**
-- local network sync
+- direct P2P sync (QUIC via iroh, works across networks)
 - basic clipboard history
 - auto-update
 
 What you don't get:
-- no relay transport
+- no relay transport (fallback when direct connection fails)
 
 What this looks like in the UI:
 - sidebar badge says **Lite**

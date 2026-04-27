@@ -10,7 +10,7 @@ The Peers page is where you add, view, pin, reconnect, disconnect, and remove de
 
 ![Peers page annotated](../docs/images/peers-annotated.png)
 
-The annotated view highlights: ① **Search devices...** field — search by name or node ID. ② Filter buttons with counts: **All**, **Connected**, **Offline**, **Pinned**. ③ Device card — shows name, status, transport, latency, and actions. ④ **Add Device** button — opens the pairing dialog.
+The annotated view highlights: ① **Search devices...** field — search by name or node ID. ② Filter buttons with counts: **All**, **Connected**, **Offline**, **Pinned**. ④ **Add Device** button — opens the pairing dialog. Device cards (not annotated in this screenshot) show name, status, transport, latency, and actions.
 
 If you have no devices yet, the page shows an empty state card with:
 - **Add Device**

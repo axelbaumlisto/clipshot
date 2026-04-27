@@ -10,7 +10,7 @@ History is a unified timeline of transfers and peer activity.
 
 ![History page annotated](../docs/images/history-annotated.png)
 
-The annotated view highlights: ① **Search files, peers...** field — search by filename, peer name, or content type. ② Filter chips: **All**, **Transfers**, **Events**, **Failed** with counts. ③ Transfer row — shows file, peer, direction, type badge, size, and time. ④ **TODAY** date header — sticky headers group entries by day.
+The annotated view highlights: ① **Search files, peers...** field — search by filename, peer name, or content type. ② Filter chips: **All**, **Transfers**, **Events**, **Failed** with counts. ③ **Pair device** button in the sidebar — the main entry point for adding new devices.
 
 ### Search
 

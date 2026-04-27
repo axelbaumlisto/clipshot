@@ -10,7 +10,7 @@ The Settings page is split into collapsible cards. Clipshot remembers which sect
 
 <img src="../docs/images/settings-annotated.png" alt="Settings page annotated" class="img-wide">
 
-The annotated view highlights: ① **Connection** card — Hub Portal URL, Group Token, subscription info. ② **General** card — theme, startup, notifications, hotkey. ③ **Save Changes** / **Reset to Defaults** buttons at the bottom.
+The annotated view highlights: ① **Clipshot** header with Lite badge — always visible at the top of the sidebar.
 
 If you make changes, a sticky bar appears at the bottom with:
 - **Discard**

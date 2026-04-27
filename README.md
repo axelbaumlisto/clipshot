@@ -40,7 +40,7 @@ clipshot setup   # opens browser for registration
 clipshot
 
 # Headless daemon
-clipshot daemon --port 19231 --http-port 18080
+clipshot daemon --port 19231 --http-port 15282
 
 # CLI commands
 clipshot pair WORD-WORD-00      # Pair with another device
@@ -67,8 +67,8 @@ cargo build --release --no-default-features --features iroh  # Headless
 
 | Suite | Count | Command |
 |-------|-------|---------|
-| Rust unit | 1440 | `cargo test --lib` |
-| Vitest | 188 | `cd web && npx vitest run` |
+| Rust unit | 1459 | `cargo test --lib` |
+| Vitest | 232 | `cd web && bun x vitest run` |
 | Docker API E2E | 43 | `npx playwright test --project=docker-api` |
 | Stress | 542 | `scripts/stress-test.sh 50` |
 

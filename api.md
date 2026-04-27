@@ -193,6 +193,7 @@ Accepted update fields in `POST /api/settings`:
 Not accepted via HTTP API:
 
 - `is_pro`
+- `node_password`
 - `relay_enabled`
 
 Validation ranges enforced by `UpdateSettingsRequest`:

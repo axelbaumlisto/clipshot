@@ -15,30 +15,31 @@ The fastest way to add a new Linux or macOS device is:
 curl -fsSL https://clipshot.cc/install.sh | bash
 ```
 
-After install, pair with another device:
+Without a `--code` flag the installer opens your browser to create an account or sign in — no pair code needed. After you finish in the browser, the installer saves your token and starts the daemon automatically.
+
+To join an existing device's group instead:
 
 ```bash
-clipshot pair WORD-WORD-00
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
 ```
-
-Or create a new account directly:
-
-```bash
-clipshot setup
-```
-
-This opens your browser for registration — no pair code needed.
 
 What the installer does:
-- downloads the correct binary for your OS and CPU
-- creates the config directory
-- makes the binary executable
+1. downloads the correct binary for your OS and CPU
+2. installs it to `~/.local/bin` and adds it to your PATH
+3. pre-configures `~/.config/clipshot/settings.toml` with the hub and relay URLs
+4. authenticates — opens browser for device auth **or** pairs with `--code`
+5. installs a background service (systemd user service on Linux, launchd agent on macOS)
+6. starts the daemon and verifies the connection
 
-Supported by the installer script:
+Other installer options: `--port=PORT`, `--hub=URL`.
+
+Supported platforms:
 - Linux
 - macOS
 
 For Windows, use the binary download method below.
+
+If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair WORD-WORD-00` to join an existing group, then `clipshot service install` to set up auto-start.
 
 ### Download binary
 

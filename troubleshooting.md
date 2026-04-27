@@ -11,6 +11,7 @@ Check these first:
 - open **Settings → Connection** and confirm the hub shows **Connected**
 - open **Peers** and use **Add Device** or **Scan LAN**
 - if you are on different networks, use Pair Code or the hub instead of LAN scan
+- if both devices share a VPN (Tailscale, WireGuard, ZeroTier), Clipshot detects VPN interfaces automatically — no relay or extra config needed
 
 If needed, run:
 
@@ -22,7 +23,7 @@ clipshot doctor
 
 Signs:
 - header status says **Paused**
-- tray icon turns red
+- tray icon shows blue pause bars
 - Overview shows a **Sync is paused** banner
 
 How to resume:
