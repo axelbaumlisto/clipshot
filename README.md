@@ -1,104 +1,85 @@
-<p align="center">
-  <img src="https://clipshot.cc/favicon.svg" width="80" alt="Clipshot Logo">
-</p>
+# Clipshot
 
-<h1 align="center">Clipshot</h1>
+P2P mesh clipboard sync across all your devices. Copy on one — paste on another.
 
-<p align="center">
-  <b>Cross-platform P2P clipboard sync</b><br>
-  Copy on one device, paste on another. Encrypted, no cloud, no accounts.
-</p>
-
-<p align="center">
-  <a href="https://clipshot.cc">Website</a> •
-  <a href="https://clipshot.cc/#pricing">Pricing</a> •
-  <a href="docs/USER_GUIDE.md">User Guide</a> •
-  <a href="https://clipshot.cc/#download">Download</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/version-0.5.0-emerald" alt="Version">
-  <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux%20%7C%20Windows-blue" alt="Platforms">
-  <img src="https://img.shields.io/badge/tests-2400%2B%20passing-brightgreen" alt="Tests">
-  <img src="https://img.shields.io/badge/license-proprietary-lightgrey" alt="License">
-</p>
-
----
-
-## What is Clipshot?
-
-Clipshot syncs your clipboard across all your devices in real-time using peer-to-peer encrypted connections. No cloud servers see your data.
-
-**Key features:**
-- 🔒 **P2P Encrypted** — data never touches our servers
-- ⚡ **Instant Sync** — clipboard changes propagate in milliseconds
-- 🖥️ **Cross-Platform** — macOS, Linux, Windows, headless servers, WSL
-- 🌐 **Relay Transport** (Pro) — sync across any network
-- 🔄 **Auto-Update** — seamless background updates
-- 📋 **Clipboard History** — browse and restore past items
-
-## Install
-
-### macOS
-```bash
-brew install --cask clipshot
-```
-Or download from [clipshot.cc](https://clipshot.cc/#download)
-
-### Linux
-```bash
-curl -fsSL https://clipshot.cc/install.sh | bash
-```
-
-### One-liner with pairing
-```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
-```
-
-### Headless / Server
-```bash
-clipshot daemon --port 19231 --http-port 15282
-```
+One binary works everywhere: desktop GUI with system tray, headless CLI daemon, or one-shot SSH commands.
 
 ## Quick Start
 
-1. **Install** on two or more devices
-2. **Pair** using a pair code or share link
-3. **Copy** on one device — it appears on all others instantly
+```bash
+# Install on any machine (Linux/macOS)
+curl -fsSL https://clipshot.cc/install.sh | bash
 
-## Screenshots
+# Or download installer: https://clipshot.cc/#download
+# macOS: DMG, Windows: NSIS installer, Linux: binary
+```
 
-<p align="center">
-  <img src="docs/images/overview.png" width="600" alt="Overview">
-</p>
+**Pair two devices (no account needed):**
+1. On device A: `clipshot pair --local` → get `LOCAL_MOON_42`
+2. On device B: `clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080`
+3. Done — clipboards sync automatically
+
+**Or with Portal account:**
+1. On device A: open GUI → Pair → Generate Code
+2. On device B: enter the code (GUI or `clipshot pair BLUE-FISH-42`)
+
+**Or create a new account:**
+```bash
+clipshot setup   # opens browser for registration
+```
+
+## Features
+
+- **Automatic clipboard sync** — copy text/images/files, synced to all connected devices
+- **P2P mesh** — devices connect directly via QUIC (iroh), no cloud relay needed
+- **Works without internet** — local network (mDNS), share URI, or manual add
+- **GUI + CLI** — desktop app with tray icon, or headless daemon for servers
+- **Hub discovery** — devices find each other automatically via Portal (optional)
+- **Pair codes** — zero-config pairing: Portal codes or local `LOCAL_WORD_NN` (no account)
+- **Catch-up** — missed syncs delivered on reconnect
+- **Cross-platform** — macOS, Linux, Windows
+
+## Usage
+
+```bash
+# Desktop (auto-launches GUI if display available)
+clipshot
+
+# Headless daemon
+clipshot daemon --port 19231 --http-port 15282
+
+# CLI commands
+clipshot pair WORD-WORD-00      # Pair via Portal
+clipshot pair --local           # Generate local pair code (no account)
+clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # Join local
+clipshot share-uri              # Generate share link
+clipshot push "hello"           # Send text to peers
+clipshot history                # Show sync history
+```
+
+## Build
+
+```bash
+cd web && bun install && bun run build && cd ..
+cargo build --release                                    # GUI
+cargo build --release --no-default-features --features iroh  # Headless
+```
 
 ## Documentation
 
-- [User Guide](docs/USER_GUIDE.md) — complete usage guide with screenshots
-- [FAQ](docs/FAQ.md) — frequently asked questions
-- [Changelog](CHANGELOG.md) — version history
+- **[User Guide](docs/USER_GUIDE.md)** — installation, every screen, every button, troubleshooting
+- **[CLAUDE.md](CLAUDE.md)** — developer reference, architecture, API, testing
+- **[E2E Testing](docs/E2E_TESTING.md)** — Docker E2E test suites
 
-## Pricing
+## Tests
 
-| | Lite (Free) | Pro ($5/mo) |
-|---|---|---|
-| Devices | 2 | Unlimited |
-| Local sync | ✅ | ✅ |
-| Relay transport | — | ✅ |
-| Clipboard history | ✅ | ✅ |
-| Auto-update | ✅ | ✅ |
-| Priority support | — | ✅ |
-
-**Lifetime Pro: $200** — one-time purchase, everything in Pro forever.
-
-[Get started →](https://clipshot.cc/#pricing)
-
-## Support
-
-- 📧 [contact@clipshot.cc](mailto:contact@clipshot.cc)
-- 🐛 [GitHub Issues](https://github.com/clipshot1/clipshot/issues)
-- 🌐 [clipshot.cc](https://clipshot.cc)
+| Suite | Count | Command |
+|-------|-------|---------|
+| Rust unit | 1459 | `cargo test --lib` |
+| Vitest | 232 | `cd web && bun x vitest run` |
+| Docker API E2E | 43 | `npx playwright test --project=docker-api` |
+| Stress | 542 | `scripts/stress-test.sh 50` |
 
 ## License
 
-Clipshot is proprietary software. Free to download and use under the [EULA](LICENSE).
+MIT
