@@ -3,6 +3,43 @@ layout: default
 title: Changelog
 nav_order: 10
 ---
+## v0.7.0
+
+### Added
+- **Mesh auto-relay**: every node can relay for group peers
+- **N0 public relay fallback**: 4 free global relay regions via iroh
+- **VPN-aware networking**: automatic Tailscale, WireGuard, ZeroTier detection
+- **Standalone local pairing**: `LOCAL_WORD_NN` codes, no Portal needed
+- **Local-only GUI mode**: "Use on local network only" — works without account
+- **mDNS auto-scan**: daemon scans every 60s, auto-adds peers
+- **Install script**: `--uri`, `--code=LOCAL_*`, `--addr` flags
+- **PairDialog**: 3 tabs (Pair Code | Local Pair | Scan LAN)
+- **Mesh forwarding**: 20MB through 3-hop chain proven in E2E
+- **Sleep/wake detection**: tick gap >10s triggers immediate reconnect
+- **Peer name dedup**: duplicate names get device_type suffix
+- **Version badge**: sidebar shows daemon version
+- **musl static build**: Linux binary works on any distro
+
+### Changed
+- **Free tier**: 3 devices (was 2), max_file_size 10MB (was 50MB)
+- **Health check**: all peers per tick, cap 5 (was one per tick)
+- **Dead peer cleanup**: immediate via is_dead() (was 5min stale threshold)
+- **PNG compression**: None (was Jpeg{90} — dead code removed)
+- **Text sync**: always saved to file (headless fix)
+- **Burst reconnect**: 3 peers when isolated (was 1)
+
+### Fixed
+- Stale iroh address after peer restart (merge replaces enriched)
+- Handshake collision backoff loop (Transient accept error)
+- Startup race: deterministic tie-breaker (lower node_id initiates)
+- Event loop hang when iroh accept dies
+- Docker address explosion (enumerate_interfaces + classify)
+
+### Stats
+- 1685 Rust + 247 Vitest tests
+- 10-node mesh E2E, 20MB 3-hop chain, 5min keepalive proven
+- 18 code fixes this release
+
 ## v0.5.1
 
 ### Added
