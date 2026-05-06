@@ -45,6 +45,7 @@ Fields returned by `GET /api/status` and Tauri `get_daemon_status`:
 - `hub_limit_manage_url: string | null`
 - `hub_limit_message: string | null`
 - `sync_state: "idle" | "sending" | "receiving" | "no_peers" | "paused"`
+- `app_version: string`
 
 #### `FullPeerInfo`
 
@@ -222,6 +223,27 @@ Validation:
 
 - `RetryTransferRequest.file_path`: 1..4096 chars
 - `CopyToClipboardRequest.text`: 1..1_000_000 chars
+
+### Local pair routes (`src/http/handlers_local_pair.rs`)
+
+Standalone pairing without Portal. Code format: `LOCAL_WORD_NN`.
+
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/api/local-pair/generate` | – | `{code, addresses[], expires_in_secs}` |
+| POST | `/api/local-pair/join` | `{code, iroh_addr, name}` | `{iroh_addr, name}` of generator |
+
+Behavior:
+- Generate creates a one-time code (TTL 5 min, max 5 wrong attempts)
+- Join verifies code, exchanges iroh addresses, auto-adds peer
+- Code consumed after successful join
+- Rate limit: 5 failed attempts → code revoked
+
+### Sync / transfer / paste routes
+
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/api/paste_path` | – | saves clipboard to sync dir, writes path, simulates paste |
 
 ### Test-only daemon HTTP routes (`src/http/handlers_test.rs`)
 
