@@ -93,6 +93,24 @@ Use either:
 
 All of them open the same add-device dialog.
 
+The dialog has **3 tabs** (or 2 without account):
+- **Pair Code** — Portal pair codes (requires account)
+- **Local Pair** — Local pair codes `LOCAL_WORD_NN` (no account needed)
+- **Scan LAN** — mDNS local network scan
+
+Plus **Advanced**: Paste Link + Manual Entry.
+
+When no account is configured, the Pair Code tab is hidden and Local Pair is default.
+
+#### Local Pair
+
+The recommended method when no account is configured.
+
+- Click **Generate Local Code** — shows `LOCAL_MOON_42` + your IP addresses + install one-liner
+- Or enter a code from another device + IP address, click **Join**
+- Code valid for 5 minutes, one-time use
+- Works on same LAN, Tailscale, any VPN
+
 #### Pair Code
 
 <img src="../docs/images/add-device-pair.png" alt="Add Device — Pair Code tab" class="img-dialog">
