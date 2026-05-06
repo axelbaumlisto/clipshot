@@ -19,14 +19,28 @@ Best for:
 - remote servers
 - devices on different networks
 
-### Pair Code (recommended for new devices)
+### Local Pair Code (no account needed)
 
-A Pair Code is the easiest way to put a new device into the same private group.
+A Local Pair Code (`LOCAL_MOON_42`) lets you pair two devices without any account or portal.
+
+Flow:
+1. On device A: `clipshot pair --local` → get `LOCAL_MOON_42`
+2. On device B: `clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080`
+3. Done — devices sync automatically
 
 Best for:
-- first-time setup
-- adding your own devices
+- first-time setup without account
+- same network or Tailscale/VPN
+- headless servers
+
+### Portal Pair Code (requires account)
+
+A Portal Pair Code (`BLUE-FISH-42`) is the easiest way to put a new device into the same private group.
+
+Best for:
+- devices on different networks
 - using the one-line installer
+- adding devices to an existing account
 
 ### Share Link (`clipshot://`)
 
@@ -39,7 +53,11 @@ Typical flow:
 
 ### Local Network Scan (mDNS, LAN only)
 
-This method looks for nearby Clipshot devices on the same local network.
+Clipshot scans the local network for nearby devices using mDNS (`_clipshot._tcp.local.`).
+
+**Automatic mode:** When `auto_discover=true` and connected peers < free limit, the daemon scans every 60 seconds and auto-adds discovered peers.
+
+**Manual mode:** In the GUI, open **Pair → Scan LAN** to scan and select devices.
 
 Best for:
 - quick local setup
@@ -56,10 +74,11 @@ Use this when:
 
 ### Comparison table
 
-| Method | Best for | Internet needed | Works across different networks | What you enter |
+| Method | Best for | Internet needed | Account needed | What you enter |
 |---|---|---:|---:|---|
-| Hub/Portal | everyday automatic discovery | Yes | Yes | nothing after setup |
-| Pair Code | adding a new device | Yes | Yes | short code |
-| Share Link | advanced sharing | Usually | Yes | `clipshot://...` |
-| Local Network Scan | same LAN | No | No | just click Scan |
-| Manual Address | expert/manual setup | No | Sometimes | address + optional password |
+| Hub/Portal | automatic discovery | Yes | Yes | nothing after setup |
+| Local Pair Code | first setup, no account | No | **No** | `LOCAL_MOON_42` |
+| Portal Pair Code | adding across networks | Yes | Yes | `BLUE-FISH-42` |
+| Share Link | advanced sharing | Usually | No | `clipshot://...` |
+| Local Network Scan | same LAN | No | No | just click Scan (auto every 60s) |
+| Manual Address | expert/manual setup | No | No | address + optional password |
