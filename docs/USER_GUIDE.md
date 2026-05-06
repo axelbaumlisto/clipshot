@@ -8,41 +8,114 @@ Clipshot is a peer-to-peer clipboard sync app for your own devices. It keeps tex
 
 ### One-liner (recommended)
 
-The fastest way to add a new Linux or macOS device is:
-
-1. On a device that is already connected, open **Pair device** or run `clipshot pair`.
-2. Generate a **Pair Code**.
-3. On the new device, run:
+**With Portal (pair code):**
 
 ```bash
 curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
 ```
 
+Get the code from another device: GUI → Pair → Generate Code, or `clipshot pair`.
+
+**Without Portal (share link):**
+
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --uri='clipshot://node/...'
+```
+
+Get the link from another device: `clipshot share-uri` or GUI → Peers → Share Link.
+
+**Install only (connect later):**
+
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --headless --no-autostart
+clipshot pair WORD-WORD-00       # with Portal
+clipshot add-uri 'clipshot://...' # without Portal
+clipshot setup                    # create new account in browser
+```
+
 What the installer does:
 - downloads the correct binary for your OS and CPU
-- saves initial settings
-- joins your private Clipshot group with the pair code
-- installs Clipshot as a background service
-- starts the daemon automatically
+- creates the config directory
+- makes the binary executable
 
 Supported by the installer script:
 - Linux
 - macOS
 
-For Windows, use the binary download method below.
+For Windows, download the NSIS installer from [clipshot.cc](https://clipshot.cc).
 
-### Download binary
+install.sh flags:
+- `--code=CODE` — pair code: `BLUE-FISH-42` (Portal) or `LOCAL_MOON_42` (local, no Portal)
+- `--uri=URI` — share link from another device (no Portal needed)
+- `--addr=IP:PORT` — target device address (for local pair codes)
+- `--headless` — download bare binary only (no DMG/GUI)
+- `--no-autostart` — skip systemd/launchd service creation
+- `--port=PORT` — daemon port (default 19231)
 
-Download the binary that matches your machine:
+Routing: codes starting with `LOCAL_` are resolved locally (HTTP API), others via Portal.
 
-- `clipshot-linux-x64`
-- `clipshot-macos-x64`
-- `clipshot-macos-arm64`
-- `clipshot-windows-x64.exe`
+### Download installer
 
-What happens next:
-- On a desktop system with a display, running `clipshot` opens the GUI.
-- On a headless machine, run `clipshot daemon` to start the background sync service.
+Download the installer for your platform from [clipshot.cc](https://clipshot.cc):
+
+| Platform | File | Type |
+|---|---|---|
+| macOS ARM (M1+) | `Clipshot_VERSION_aarch64.dmg` | DMG installer |
+| macOS Intel | `clipshot-macos-x64` | Binary |
+| Windows x64 | `Clipshot_VERSION_x64-setup.exe` | NSIS installer |
+| Linux x64 | `clipshot-linux-x64` | GUI Binary (requires GTK3 + WebKit2) |
+
+**macOS DMG:**
+1. Open the DMG
+2. Drag Clipshot to Applications
+3. **First launch:** right-click the app in Applications → **Open** (do not double-click)
+4. macOS will warn that the app is from an unidentified developer — click **Open** to confirm
+5. After the first launch, double-click works normally
+
+> **Why the warning?** Clipshot is not yet notarized with Apple. The app is ad-hoc signed, which means macOS Gatekeeper blocks it on first launch. Right-click → Open bypasses this check once. This will be resolved when Clipshot is notarized through the Apple Developer Program.
+
+**If macOS says the app is "damaged" or "cannot be opened":**
+
+This happens when macOS quarantine flags remain on the app bundle. Run this in Terminal:
+
+```bash
+xattr -cr /Applications/Clipshot.app
+```
+
+Then launch normally. The `-cr` flag recursively clears all extended attributes including the quarantine flag.
+
+**macOS binary (non-DMG, e.g. from `install.sh --headless`):**
+
+If you downloaded the bare binary instead of the DMG, clear quarantine before the first run:
+
+```bash
+xattr -cr ./clipshot
+chmod +x ./clipshot
+./clipshot
+```
+
+**Summary of macOS Gatekeeper workarounds:**
+
+| Symptom | Fix |
+|---|---|
+| "Clipshot can't be opened because it is from an unidentified developer" | Right-click → Open → Open |
+| "Clipshot is damaged and can't be opened" | `xattr -cr /Applications/Clipshot.app` |
+| Binary downloaded via curl/browser won't run | `xattr -cr ./clipshot && chmod +x ./clipshot` |
+| Repeated warnings after update | Re-run `xattr -cr` after each update until notarization is available |
+
+**Windows NSIS:**
+1. Run the installer (double-click or `Clipshot_VERSION_x64-setup.exe /S` for silent)
+2. Launch from Start Menu
+3. Allow through Windows Firewall when prompted
+
+**Linux / macOS Intel binary:**
+```bash
+chmod +x clipshot-linux-x64
+./clipshot-linux-x64
+```
+
+On a desktop system with a display, running `clipshot` opens the GUI.
+On a headless machine, run `clipshot daemon` to start the background sync service.
 
 ### Build from source
 
@@ -58,7 +131,7 @@ cd ..
 cargo build --release
 ```
 
-Headless build without the GUI:
+Headless build (servers only, no GUI):
 
 ```bash
 cargo build --release --no-default-features --features iroh
@@ -89,14 +162,15 @@ If Clipshot has no group token yet, it opens the **Welcome Screen** instead of t
 The Welcome Screen shows:
 - a short 3-step intro: **Pair → Connect → Sync**
 - a primary button: **Pair with another device**
+- a secondary button: **Create Account** — opens your browser for registration (Google OAuth supported)
 - a collapsible section: **Enter token manually**
 - a link: **Open Settings**
 
 ![Welcome Screen annotated](images/welcome-annotated.png)
 
-The callouts above show: ① **Pair with another device** — the recommended way to join. ② **Enter token manually** — expand to paste an existing group token. ③ **Open Settings** — access settings before connecting.
+The callouts above show: ① The intro card with the 3-step overview. ② **Pair with another device** — the recommended way to join an existing group. ③ **Create Account** — opens a browser-based registration flow. ④ **Enter token manually** — expand to paste an existing group token. ⑤ **Open Settings** — access settings before connecting.
 
-This screen is for joining an existing Clipshot group.
+This screen is for joining an existing Clipshot group or creating a new account.
 
 ### Pairing your first device
 
@@ -114,7 +188,6 @@ About the generated code:
 - it is valid for **5 minutes**
 - the dialog also lets you copy:
   - `clipshot pair WORD-WORD-00`
-  - the installer command with `--code=...`
 
 ### Alternative: enter token manually
 
@@ -143,7 +216,9 @@ The sidebar can be collapsed and expanded.
 
 ![Sidebar annotated](images/sidebar-annotated.png)
 
-The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**). ② **Pair device** button — opens the Add Device dialog from any page. ③ Navigation links: **Overview**, **Peers**, **History**, **Settings**. The active page is highlighted with a left border.
+The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**). ② Collapse/expand sidebar button. ③ Navigation links: **Overview**, **Peers**, **History**, **Settings**. The active page is highlighted with a background fill.
+
+Below the app name, the **Pair device** button opens the Add Device dialog from any page. At the bottom, the sidebar footer shows the current sync state label and peer count.
 
 ### Header Bar
 
@@ -151,11 +226,15 @@ The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**). �
 
 ![Header bar annotated](images/header-bar-annotated.png)
 
-The header bar shows: ① Sync status pill (**Ready**, **Sending**, **Receiving**, **No peers**, or **Paused**). ② **Pause** / **Resume** button. ③ Peer count badge showing connected devices. A theme toggle icon appears to the right.
+The header bar shows: ① Sync toggle button — an icon-only button that pauses or resumes sync. Its background color reflects the current sync state (green for ready, blue for sending, amber for no peers, grey for paused). ② Peer count badge — colored dots and a connected/total count such as `2/3`. ③ Theme toggle — switches between light and dark mode.
+
+Note: the text sync status label (**Ready**, **Sending**, **Receiving**, **No peers**, or **Paused**) appears in the sidebar footer, not in the header bar.
 
 ![Overview page annotated](images/overview-annotated.png)
 
-The annotated view highlights: ① Status hero card — your network health at a glance. ② Last Synced — your most recent transfer. ③ Devices — connected peer badges. ④ Recent Activity — latest events. ⑤ Node details — collapsible technical info.
+The annotated view highlights: ② Sidebar — navigation and status area. ③ Status hero card — your network health at a glance. Below the hero are three cards: Last Synced, Devices, and Recent Activity. At the bottom is a collapsible Node details section.
+
+> Note: some callouts may be hard to see on the dark theme. The five main sections are the hero card, last synced, devices, recent activity, and node details.
 
 ### Status hero
 
@@ -242,7 +321,7 @@ The Peers page is where you add, view, pin, reconnect, disconnect, and remove de
 
 ![Peers page annotated](images/peers-annotated.png)
 
-The annotated view highlights: ① **Search devices...** field — search by name or node ID. ② Filter buttons with counts: **All**, **Connected**, **Offline**, **Pinned**. ③ Device card — shows name, status, transport, latency, and actions. ④ **Add Device** button — opens the pairing dialog.
+The annotated view highlights: ① **Search devices...** field — search by name or node ID. ② Filter buttons with counts: **All**, **Connected**, **Offline**, **Pinned**. ④ **Add Device** button — opens the pairing dialog. Device cards (not annotated in this screenshot) show name, status, transport, latency, and actions.
 
 If you have no devices yet, the page shows an empty state card with:
 - **Add Device**
@@ -342,7 +421,6 @@ Inside the dialog:
   - the code itself
   - **Valid for 5 minutes**
   - a copyable CLI command
-  - a copyable one-line install command
 
 Use Pair Code when:
 - adding your own laptop or phone-sized desktop companion
@@ -440,7 +518,7 @@ History is a unified timeline of transfers and peer activity.
 
 ![History page annotated](images/history-annotated.png)
 
-The annotated view highlights: ① **Search files, peers...** field — search by filename, peer name, or content type. ② Filter chips: **All**, **Transfers**, **Events**, **Failed** with counts. ③ Transfer row — shows file, peer, direction, type badge, size, and time. ④ **TODAY** date header — sticky headers group entries by day.
+The annotated view highlights: ① **Search files, peers...** field — search by filename, peer name, or content type. ② Filter chips: **All**, **Transfers**, **Events**, **Failed** with counts. Transfer rows (visible below the filters) show file, peer, direction, type badge, size, and time. **TODAY** date headers group entries by day.
 
 ### Search
 
@@ -512,7 +590,7 @@ The Settings page is split into collapsible cards. Clipshot remembers which sect
 
 ![Settings page annotated](images/settings-annotated.png)
 
-The annotated view highlights: ① **Connection** card — Hub Portal URL, Group Token, subscription info. ② **General** card — theme, startup, notifications, hotkey. ③ **Save Changes** / **Reset to Defaults** buttons at the bottom.
+The annotated view highlights: ① App name in the sidebar. The main settings area shows collapsible cards: **Connection** (Hub Portal URL, Group Token, subscription info), **General** (theme, startup, notifications, hotkey), **Sync**, **Storage**, **Network**, and **Advanced**. At the bottom are **Save Changes** / **Reset to Defaults** buttons.
 
 If you make changes, a sticky bar appears at the bottom with:
 - **Discard**
@@ -546,6 +624,41 @@ You may also see:
 About `relay_url`:
 - Relay URL affects connectivity too, but in the current UI it is edited in the **Network** card, not inside **Connection**.
 
+### Working without Portal
+
+Clipshot Portal (clipshot.cc) provides automatic device discovery and pair codes. However, **devices can connect without it**:
+
+| Method | How | Needs Portal? |
+|---|---|---|
+| **Local pair code** | `clipshot pair --local` → `LOCAL_MOON_42` → other device joins | No |
+| **Share URI** | `clipshot share-uri` → send link → `clipshot add-uri 'clipshot://...'` | No |
+| **Local Network (mDNS)** | Automatic on same LAN (`_clipshot._tcp.local.`) — scans every 60s | No |
+| **Manual add** | Enter peer name + IP address in GUI or CLI | No |
+| **Portal pair code** | `clipshot pair BLUE-FISH-42` | **Yes** |
+
+**Local pair example (no account needed):**
+
+```bash
+# Device A:
+clipshot pair --local
+# → LOCAL_MOON_42 • 192.168.1.10:18080
+
+# Device B (same LAN — auto-finds via mDNS):
+clipshot pair --local LOCAL_MOON_42
+
+# Device B (different network — specify IP):
+clipshot pair --local LOCAL_MOON_42 --addr 100.64.0.5:18080
+
+# One-liner install + pair:
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+```
+
+If Portal is down or unreachable:
+- Existing connections continue working (P2P, no server in data path)
+- New devices can join via Share URI, mDNS, or manual add
+- Pair codes will not work until Portal is restored
+- Mesh forwarding delivers data through connected peers
+
 ### General (theme, hotkey)
 
 The **General** card includes:
@@ -559,9 +672,9 @@ The **General** card includes:
 - **Clipboard Toggle Hotkey** text field
 
 Notes:
-- the default sync toggle hotkey is **Ctrl+B**
+- the default sync toggle hotkey is **Cmd+Shift+S** (macOS) or **Ctrl+Shift+S** (Windows/Linux)
+- the default paste path hotkey is **Cmd+B** (macOS) or **Ctrl+B** (Windows/Linux)
 - changing hotkeys requires a restart
-- the clipboard toggle hotkey is separate from pause/resume sync
 
 ### Sync (catchup_limit, max_file_size)
 
@@ -574,6 +687,15 @@ What they mean:
 - **Catch-up sync limit** controls how many recent clipboard entries a reconnecting device can fetch
 
 If you set a very large file limit, Clipshot warns that large files may time out.
+
+### Storage (sync file retention)
+
+The **Storage** card includes:
+- **Max files** — maximum number of files to keep in the sync directory (0 = unlimited)
+- **Max age (days)** — delete synced files older than this many days (0 = unlimited)
+- **Max size (MB)** — maximum total size of the sync directory (0 = unlimited)
+
+These settings control automatic cleanup of `~/.clipshot/sync/`.
 
 ### Network (listen_port, max_peers)
 
@@ -653,6 +775,7 @@ The tray icon tooltip is **Clipshot - P2P Clipboard Sync**.
 
 Tray menu items:
 - **Open Dashboard**
+- **Copy Last Synced**
 - **Toggle Sync**
 - **Upgrade to Pro** on Lite plans
 - **Quit**
@@ -669,6 +792,8 @@ On macOS, the Dock icon has its own menu:
 - separator
 - **Quit**
 
+Note: the Dock menu does not include **Copy Last Synced** or **Upgrade to Pro**.
+
 ### Dock Progress Bar
 
 During active transfers, Clipshot shows overall transfer progress on the app window taskbar/dock indicator where the platform supports it.
@@ -680,29 +805,43 @@ What it does:
 
 ## Keyboard Shortcuts
 
-### Ctrl+B: Toggle Sync
+### Ctrl+Shift+S / Cmd+Shift+S: Toggle Sync
 
-By default, **Ctrl+B** pauses or resumes clipboard sync.
+By default, **Cmd+Shift+S** (macOS) or **Ctrl+Shift+S** (Windows/Linux) pauses or resumes clipboard sync.
 
 You can change this shortcut in **Settings → General → Toggle Sync Hotkey**.
 
 If the hotkey changes, restart Clipshot.
 
-### Header: Pause/Resume button
+### Cmd+B / Ctrl+B: Paste File Path
 
-The top header shows a sync status pill plus an action button.
+By default, **Cmd+B** (macOS) or **Ctrl+B** (Windows/Linux) pastes the file path of the last synced clipboard content.
 
-Status labels you may see:
-- **Ready**
-- **Sending**
-- **Receiving**
-- **No peers**
-- **Paused**
+How it works:
+1. You copy an image or file → Clipshot syncs it and saves to `~/.clipshot/sync/`
+2. Press **Cmd+B** → Clipshot temporarily puts the file path in clipboard, simulates Ctrl+V/Cmd+V, then restores original clipboard
+3. The path (e.g. `~/.clipshot/sync/img_20260502_339b.png`) is pasted into your editor/terminal
 
-Button behavior:
-- when sync is active, the button says **Pause**
-- when sync is paused, the button says **Resume**
-- when the state is **No peers**, only the status pill is shown
+Useful for:
+- Pasting a screenshot path into a chat or document
+- Referencing synced files by path in terminal commands
+- Quick access to the actual file on disk
+
+This works in any app — editors, terminals, chat apps.
+
+### Sync status indicators
+
+The sidebar footer shows a text label for the current sync state:
+- **Ready** — sync is enabled and idle
+- **Sending** — clipboard content is being sent
+- **Receiving** — clipboard content is being received
+- **No peers** — sync is enabled but no devices are connected
+- **Paused** — sync is paused
+
+The header bar has an icon-only toggle button:
+- when sync is active, it shows a **pause** icon — click to pause
+- when sync is paused, it shows a **play** icon — click to resume
+- during a transfer, it shows a **spinner** icon
 
 ## CLI Mode (Headless Servers)
 
@@ -765,6 +904,19 @@ Show recent sync history:
 clipshot history
 ```
 
+Set up a new account (opens browser for registration):
+
+```bash
+clipshot setup
+```
+
+Check for or install updates:
+
+```bash
+clipshot update
+clipshot update --check
+```
+
 Other useful CLI commands:
 
 ```bash
@@ -777,26 +929,30 @@ clipshot retry-transfer /path/to/file
 clipshot doctor
 ```
 
-### systemd / launchd auto-start
+### Auto-start
 
-Install Clipshot as a background service:
+Clipshot starts automatically on boot by default. The one-line installer configures this for you.
+
+| Platform | Mechanism | Config file |
+|---|---|---|
+| Linux | systemd user service | `~/.config/systemd/user/clipshot.service` |
+| macOS (CLI) | launchd agent | `~/Library/LaunchAgents/cc.clipshot.daemon.plist` |
+| macOS (GUI) | Login Items | via System Events |
+
+Install or manage the service manually:
 
 ```bash
 clipshot service install --port 19231 --http-port 18080
-```
-
-Manage it with:
-
-```bash
 clipshot service status
 clipshot service logs
 clipshot service uninstall
 ```
 
-Notes:
-- Linux uses a **systemd user service**
-- macOS uses a **launchd agent**
-- the one-line installer sets this up automatically for you
+To skip auto-start during install: `curl ... | bash -s -- --no-autostart`
+
+To toggle from the GUI: **Settings → General → Start at login**
+
+**PID lock**: only one daemon runs at a time. A second instance exits with "Another clipshot daemon is already running". The lock file is at `~/.config/clipshot/daemon.lock`.
 
 ## How Sync Works
 
@@ -901,7 +1057,7 @@ Use this when:
 Lite is the free plan.
 
 What you get:
-- up to **2 devices**
+- up to **3 devices**
 - local network sync
 - basic clipboard history
 - auto-update
@@ -925,7 +1081,7 @@ What you get:
 - priority support
 - everything in Lite
 
-### Lifetime Pro: $200 one-time
+### Lifetime Pro: $100 one-time
 
 Pay once, sync forever. All Pro features with no recurring payments.
 
@@ -933,7 +1089,9 @@ What you get:
 - everything in Pro
 - no recurring payments
 - lifetime updates
-- early access to new features
+- all future Pro features included
+
+Note: "Lifetime" refers to the lifetime of the product. See [Terms of Service](https://clipshot.cc/terms) for details.
 
 ### Grace period
 
@@ -1041,3 +1199,15 @@ This file stores known/saved peers.
 ### HMAC secret: `~/.config/clipshot/hmac_secret`
 
 This secret is used to validate Clipshot share links.
+
+## Clipboard Toggle Hotkey
+
+Default: **none** (not set). The input placeholder suggests `ctrl+a` as a starting point. Toggles clipboard between image/file content and the sync file path. Change in Settings → General → Clipboard Toggle Hotkey.
+
+## Using Clipshot with VPN
+
+If your devices are on the same Tailscale, WireGuard, or ZeroTier network, Clipshot connects through it automatically — no relay needed, even on the free plan.
+
+## Multiple Groups
+
+If your account has more than one group, the setup page shows a group picker. Choose which group the new device should join.
