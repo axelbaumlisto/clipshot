@@ -9,19 +9,34 @@ Use the one-line installer if you want the fastest setup. Use the binary or sour
 
 ### One-liner (recommended)
 
-The fastest way to add a new Linux or macOS device is:
+**With account (Portal pair code):**
 
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=BLUE-FISH-42
 ```
 
-Without a `--code` flag the installer opens your browser to create an account or sign in — no pair code needed. After you finish in the browser, the installer saves your token and starts the daemon automatically.
-
-To join an existing device's group instead:
+**Without account (local pair code):**
 
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=WORD-WORD-00
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
 ```
+
+**Without account (share link):**
+
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --uri='clipshot://node/...'
+```
+
+**Install only (connect later):**
+
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --headless --no-autostart
+clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # local
+clipshot pair BLUE-FISH-42  # portal
+clipshot setup              # create account in browser
+```
+
+Routing: codes starting with `LOCAL_` are resolved locally via HTTP API. Others go through Portal.
 
 What the installer does:
 1. downloads the correct binary for your OS and CPU
@@ -32,7 +47,14 @@ What the installer does:
 6. starts the daemon and verifies the connection
 7. enables PID lock — only one daemon instance can run at a time
 
-Other installer options: `--port=PORT`, `--hub=URL`, `--no-autostart`.
+Installer options:
+- `--code=CODE` — pair code: `BLUE-FISH-42` (Portal) or `LOCAL_MOON_42` (local)
+- `--uri=URI` — share link from another device (no account needed)
+- `--addr=IP:PORT` — target device address (for local pair codes)
+- `--port=PORT` — daemon port (default 19231)
+- `--hub=URL` — hub URL (default https://clipshot.cc)
+- `--headless` — bare binary only (no DMG/GUI)
+- `--no-autostart` — skip service creation
 
 Supported platforms:
 - Linux
@@ -118,8 +140,9 @@ The Welcome Screen shows:
 - a short 3-step intro: **Pair → Connect → Sync**
 - a primary button: **Pair with another device**
 - a secondary button: **Create Account** — opens your browser for registration (Google OAuth supported)
+- a link: **Use on local network only** — skips account setup, enables local-only mode with mDNS discovery and local pair codes
 - a collapsible section: **Enter token manually**
-- a link: **Open Settings**
+- a link: **Settings**
 
 ![Welcome Screen annotated](docs/images/welcome-annotated.png)
 
