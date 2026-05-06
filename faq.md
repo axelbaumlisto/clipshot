@@ -66,6 +66,14 @@ Yes. If your devices share a VPN network (Tailscale, WireGuard, ZeroTier), Clips
 
 Desktop builds prompt for updates in-app. CLI installs can run `clipshot update` to check for a newer release and install it.
 
+## Can other users on the same network see my data?
+
+No. Every account has a unique group token. Only devices with the same token can discover each other. A stranger's Clipshot node on the same WiFi cannot see your devices, read your clipboard, or route traffic through your node. Peer relay only serves your own group. mDNS discovery rejects mismatched groups during handshake.
+
+## Does the relay server see my clipboard?
+
+No. Relay servers (both central and peer relays) forward encrypted QUIC packets. They cannot decrypt or read the content. Think of it as a sealed envelope passing through a post office — the envelope is opaque.
+
 ## Can I get a refund?
 
 Yes. Full refunds within 60 days of payment, no questions asked. Email us.
