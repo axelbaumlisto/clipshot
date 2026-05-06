@@ -3,42 +3,73 @@ layout: default
 title: FAQ
 nav_order: 8
 ---
-## How does Clipshot work?
 
-Clipshot watches your local clipboard, syncs text directly, and stores synced images and files in `~/.clipshot/sync/` so peers can fetch the same content. Recent items are kept long enough for reconnect catch-up.
+## What exactly does Clipshot do?
 
-## Is my clipboard data sent to a central server?
+Clipshot watches your clipboard. When you copy text, a screenshot, or a file — it instantly sends that content to all your other devices. They receive it and place it in their clipboard (or save it as a file). Copy on one machine, paste on another.
 
-No clipboard payloads are meant to move peer-to-peer between your own devices. The portal is used as a control plane for discovery, pairing, and subscription state, not as the main data store.
+## Do I need an account to use Clipshot?
 
-## Which platforms are supported?
+No. On first launch, click **Use on local network only** — devices find each other via mDNS or local pair codes (`LOCAL_WORD_42`). An account adds cloud device discovery and relay for different networks, but it's optional.
 
-Clipshot supports macOS, Linux, and Windows. Desktop builds provide the full GUI. Headless Linux or server setups can run the daemon and CLI instead.
+## Does my data go through your servers?
 
-## How do I pair a new device?
+No. Clipboard content travels directly between your devices over encrypted QUIC connections. The portal only helps devices find each other — it never sees your clipboard data. Think of it as a phone book, not a mailman.
 
-The recommended path is **Pair Code**. On an existing device, open **Pair device** and generate a code. On the new device, enter that code in the welcome screen or run `clipshot pair WORD-WORD-00`. You can also create a new account without a pair code by running `clipshot setup` or clicking **Create Account** on the Welcome Screen.
+## Is my data encrypted?
+
+Yes. All data travels over QUIC with TLS encryption. Content is encrypted in transit between your devices. The portal servers only handle device discovery, not clipboard content.
+
+## What can I sync?
+
+Everything your clipboard can hold: text (passwords, code, URLs), images (screenshots, photos), and files up to 10 MB (200 MB with Pro). If you can copy it, Clipshot can sync it.
+
+## How do I add a new device?
+
+Three ways:
+
+1. **Local pair code** — one device generates `LOCAL_MOON_42`, the other enters it. Works on same network or over Tailscale/VPN. No account needed.
+2. **Portal pair code** — `BLUE-FISH-42`, works over the internet. Requires account.
+3. **One-liner install**:
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+```
+
+## What if my devices are on different networks?
+
+On the same network, devices connect directly. If you use Tailscale, WireGuard, or any VPN — Clipshot connects through it automatically, even on the free plan. For other cases, Clipshot uses free public relay servers (iroh N0, 4 global regions). Pro adds our priority central relay for maximum speed.
+
+## What happens if a device goes offline?
+
+Clipshot keeps recent items in an outbox. When the device reconnects, it catches up automatically — no data lost. The mesh network forwards content through available peers, so even if two devices can't reach each other directly, data flows through a third one.
 
 ## Can I use Clipshot on a headless server?
 
-Yes. Start it with `clipshot daemon --port 19231` and use `clipshot pair WORD-WORD-00` or `clipshot add-uri 'clipshot://node/...'` to join the mesh. Service management is available with `clipshot service install`. Run `clipshot doctor` to verify that the daemon, peers, and hub connection are healthy.
+Yes. Run `clipshot daemon --port 19231` on any Linux server — no display required. One-liner install:
+```bash
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+```
 
-## What is the difference between Lite and Pro?
+## What's the difference between Free and Pro?
 
-Lite is free and supports up to 2 active peer connections (so you can sync between up to 3 devices total). It includes local sync and clipboard history. Pro removes the peer limit, enables relay transport for syncing across different networks, and includes everything in Lite. A Lifetime Pro option is also available.
+Free gives you the full experience for **3 devices** — all features, no restrictions on speed. Files up to 10 MB. You can sync over local network, VPN, or free public relays. Pro removes the device limit, increases file size to 200 MB, adds our priority relay, 30-day clipboard history, and direct support.
+
+## Why should I pay if it works for free?
+
+Running Clipshot takes time and resources — we maintain relay servers, build apps for 3 platforms, and provide support. The free plan is fully functional. If Clipshot supports your work professionally, we ask you to upgrade. Your subscription keeps the project alive for everyone.
+
+## Can I use Clipshot over Tailscale or WireGuard?
+
+Yes. If your devices share a VPN network (Tailscale, WireGuard, ZeroTier), Clipshot connects through it automatically — even on the free plan. No relay needed, no extra config.
 
 ## How do updates work?
 
-Desktop builds can prompt for updates in-app. CLI and headless installs can run `clipshot update` to check clipshot.cc for a newer release and install it, or `clipshot update --check` to only check availability. Re-running the install script is also a safe way to update installer-based setups.
+Desktop builds prompt for updates in-app. CLI installs can run `clipshot update` to check for a newer release and install it.
 
-## How do I uninstall Clipshot?
+## Can I get a refund?
 
-If you installed Clipshot as a service, run `clipshot service uninstall`. Then remove the binary and, if you want a full cleanup, delete your config directory and `~/.clipshot/` sync data.
+Yes. Full refunds within 60 days of payment, no questions asked. Email us.
 
-## Where are my synced files and settings stored?
+## Where are my files and settings stored?
 
-Synced files live in `~/.clipshot/sync/`. Settings usually live in `~/.config/clipshot/settings.toml` or the platform-equivalent app config directory.
-
-### Can I use Clipshot over Tailscale or WireGuard?
-
-Yes. If your devices share a VPN network (Tailscale, WireGuard, ZeroTier), Clipshot will connect through it automatically — even on the free plan. No relay needed, no extra config. Clipshot detects all network interfaces including VPN IPs.
+Synced files: `~/.clipshot/sync/`. Settings: `~/.config/clipshot/settings.toml`.
