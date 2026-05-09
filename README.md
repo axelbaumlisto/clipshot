@@ -49,7 +49,7 @@ clipshot
 clipshot daemon --port 19231 --http-port 15282
 
 # CLI commands
-clipshot pair WORD-WORD-00      # Pair via Portal
+clipshot pair <YOUR-CODE>      # Pair via Portal
 clipshot pair --local           # Generate local pair code (no account)
 clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # Join local
 clipshot share-uri              # Generate share link
