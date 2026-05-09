@@ -142,7 +142,7 @@ The Welcome Screen shows:
 - a secondary button: **Create Account** — opens your browser for registration (Google OAuth supported)
 - a link: **Use on local network only** — skips account setup, enables local-only mode with mDNS discovery and local pair codes
 - a collapsible section: **Enter token manually**
-- a link: **Settings**
+- a link: **Open Settings**
 
 ![Welcome Screen annotated](docs/images/welcome-annotated.png)
 

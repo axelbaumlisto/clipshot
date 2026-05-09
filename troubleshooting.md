@@ -23,13 +23,13 @@ clipshot doctor
 
 Signs:
 - header status says **Paused**
-- tray icon shows blue pause bars
+- tray icon turns red (static red icon)
 - Overview shows a **Sync is paused** banner
 
 How to resume:
 - click **Resume** in the header
 - click **Resume** in Overview
-- press **Ctrl+B**
+- press the sync toggle hotkey (**Cmd+Shift+S** on macOS, **Ctrl+Shift+S** on Windows/Linux)
 - use **Toggle Sync** from the tray or Dock menu
 
 ### Clipboard not syncing

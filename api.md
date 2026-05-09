@@ -46,6 +46,8 @@ Fields returned by `GET /api/status` and Tauri `get_daemon_status`:
 - `hub_limit_message: string | null`
 - `sync_state: "idle" | "sending" | "receiving" | "no_peers" | "paused"`
 - `app_version: string`
+- `tick_age_ms: number`
+- `peer_relay_url: string | null`
 
 #### `FullPeerInfo`
 
@@ -63,9 +65,12 @@ Fields returned by `GET /api/peers` and Tauri `get_peers`:
 - `limited: bool`
 - `reject_reason: string | null`
 - `device_type: string | null`
+- `device_id: string | null`
 - `transfer_bytes_done: number | null`
 - `transfer_bytes_total: number | null`
 - `transfer_speed_bps: number | null`
+- `connection_type: string | null`
+- `path_rtt_ms: number | null`
 
 #### `ActivityEvent`
 
@@ -140,6 +145,7 @@ Fields returned by `GET /api/peers` and Tauri `get_peers`:
 | GET | `/api/transfers` | – | `ApiResponse<TransferInfo[]>` |
 | GET | `/api/history?filter=<opt>&limit=<opt>` | – | `ApiResponse<HistoryEntry[]>`, default `limit=100` |
 | GET | `/api/history/:id/content` | – | raw file bytes; `image/*` if history entry is image, else `text/plain; charset=utf-8` |
+| GET | `/api/last_sync_path` | – | last sync file path |
 
 ### Peer routes
 
@@ -190,12 +196,26 @@ Accepted update fields in `POST /api/settings`:
 - `group_token`
 - `relay_url`
 - `max_peers_free`
+- `peer_relay_enabled`
+- `n0_relay_enabled`
 
 Not accepted via HTTP API:
 
 - `is_pro`
 - `node_password`
-- `relay_enabled`
+- `central_relay_enabled` (hub-authoritative; serde alias `relay_enabled`)
+- `sync_max_files`
+- `sync_max_age_days`
+- `sync_max_size_mb`
+- `clipboard_hotkey`
+- `paste_path_hotkey`
+- `cors_origins`
+- `theme`
+- `poll_interval_ms` (use `sync_interval_ms` API alias instead)
+- `retry_attempts`
+- `timeout_ms`
+- `catchup_limit`
+- `broadcast_queue_size`
 
 Validation ranges enforced by `UpdateSettingsRequest`:
 

@@ -10,7 +10,7 @@ The Settings page is split into collapsible cards. Clipshot remembers which sect
 
 <img src="../docs/images/settings-annotated.png" alt="Settings page annotated" class="img-wide">
 
-The annotated view highlights: ① **Clipshot** header with Lite badge — always visible at the top of the sidebar.
+The annotated view highlights: ① **Connection** card with Hub Portal URL, Group Token, and subscription info. ② **General** card with theme, startup, and hotkey settings. At the bottom, **Save Changes** and **Reset to Defaults** buttons.
 
 If you make changes, a sticky bar appears at the bottom with:
 - **Discard**
@@ -52,23 +52,24 @@ The **General** card includes:
   - Light
   - Dark
 - **Start on login** switch
-- **Show notifications** switch
 - **Toggle Sync Hotkey** selector
-- **Clipboard Toggle Hotkey** text field
+- **Paste Path Hotkey** selector
 
 Notes:
-- the default sync toggle hotkey is **Ctrl+B**
+- the default sync toggle hotkey is **Cmd+Shift+S** (macOS) or **Ctrl+Shift+S** (Windows/Linux)
+- the default paste path hotkey is **Cmd+B** (macOS) or **Ctrl+B** (Windows/Linux)
 - changing hotkeys requires a restart
-- the clipboard toggle hotkey is separate from pause/resume sync
 
-### Sync (catchup_limit, max_file_size)
+### Sync (catchup_limit, max_file_size, broadcast_queue_size)
 
 The **Sync** card includes:
 - **Max file size (MB)**
+- **Broadcast queue size**
 - **Catch-up sync limit**
 
 What they mean:
 - **Max file size** limits what Clipshot will send
+- **Broadcast queue size** controls how many clipboard items are queued for delivery (1–10, default 1). At 1, a new copy overwrites the previous pending item. Higher values keep recent items in the queue.
 - **Catch-up sync limit** controls how many recent clipboard entries a reconnecting device can fetch
 
 If you set a very large file limit, Clipshot warns that large files may time out.

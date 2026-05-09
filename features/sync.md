@@ -13,6 +13,10 @@ When you copy something:
 - images and files are saved locally and shared to peers
 - peers receive the same item and store it locally
 
+Clipboard detection never blocks on network I/O. Clipshot uses a **BroadcastQueue** (bounded FIFO) to separate clipboard polling from network delivery. The tick loop runs in stages: **Clipboard → FastOps → IncomingAndGossip → BroadcastPending → SlowReconnect**. The clipboard stage detects changes and queues them; the broadcast stage sends them to peers.
+
+You can control the queue size in **Settings → Sync → Broadcast queue size** (1–10, default 1). At 1, a new copy replaces the previous pending item.
+
 ### File storage (`~/.clipshot/sync/`)
 
 Clipshot keeps synced files in a local folder:
@@ -22,6 +26,8 @@ Clipshot keeps synced files in a local folder:
 ```
 
 This folder is where received files and synced clipboard assets are stored.
+
+**Consistent filenames:** the sender generates filenames like `img_20260502_339b.png` (date + content hash). The receiver uses the same filename, so identical content has the same name across all devices.
 
 ### Catch-up on reconnect
 
@@ -66,3 +72,8 @@ All data travels over **QUIC with TLS 1.3** encryption — the same technology u
 - Central relay (relay.clipshot.cc) forwards encrypted QUIC packets — it cannot read content
 - Peer relay (embedded on each node) only serves group members
 - N0 public relay (iroh) — same: encrypted passthrough, no content access
+
+**Post-quantum (opt-in):**
+- Build with `cargo build --features pq` to enable ML-KEM + X25519 hybrid key exchange
+- Protects against future quantum computer attacks on key exchange
+- Default builds use standard TLS 1.3 (lighter, better cross-compile support)

@@ -20,9 +20,9 @@ The sidebar can be collapsed and expanded.
 
 <img src="../docs/images/sidebar-annotated.png" alt="Sidebar annotated" class="img-narrow">
 
-The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**). ② Collapse/expand sidebar button. ③ Navigation links: **Overview**, **Peers**, **History**, **Settings**. The active page is highlighted with a background fill.
+The sidebar callouts show: ① App name and plan badge (**Pro** or **Lite**), with a collapse/expand button in the top-right corner. ② **Pair device** button — opens the Add Device dialog from any page. ③ Navigation links: **Overview**, **Peers**, **History**, **Settings**. The active page is highlighted with a background fill.
 
-Below the app name, the **Pair device** button opens the Add Device dialog from any page. At the bottom, the sidebar footer shows the current sync state label and peer count.
+At the bottom, the sidebar footer shows the current sync state label and peer count.
 
 ### Header Bar
 
@@ -36,9 +36,9 @@ Note: the text sync status label (**Ready**, **Sending**, **Receiving**, **No pe
 
 ![Overview page annotated](../docs/images/overview-annotated.png)
 
-The annotated view highlights: ② Sidebar — navigation and status area. ③ Status hero card — your network health at a glance. Below the hero are three cards: Last Synced, Devices, and Recent Activity. At the bottom is a collapsible Node details section.
+The annotated view highlights: ① Status hero card — your network health at a glance. ② Last Synced card. ③ Devices card. ④ Recent Activity card. At the bottom is a collapsible Node details section.
 
-> Note: some callouts may be hard to see on the dark theme. The five main sections are the hero card, last synced, devices, recent activity, and node details.
+> Note: the annotated view shows the content area without the sidebar. The five main sections are the hero card, last synced, devices, recent activity, and node details.
 
 ### Status hero
 

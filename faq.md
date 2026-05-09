@@ -20,6 +20,8 @@ No. Clipboard content travels directly between your devices over encrypted QUIC 
 
 Yes. All data travels over QUIC with TLS encryption. Content is encrypted in transit between your devices. The portal servers only handle device discovery, not clipboard content.
 
+For maximum security, Clipshot supports **post-quantum key exchange** (ML-KEM + X25519 hybrid) as an opt-in build flag (`cargo build --features pq`). This protects against future quantum computer attacks on key exchange.
+
 ## What can I sync?
 
 Everything your clipboard can hold: text (passwords, code, URLs), images (screenshots, photos), and files up to 10 MB (200 MB with Pro). If you can copy it, Clipshot can sync it.

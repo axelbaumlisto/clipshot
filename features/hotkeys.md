@@ -23,7 +23,7 @@ The tray icon tooltip is **Clipshot - P2P Clipboard Sync**.
 Tray menu items:
 - **Open Dashboard**
 - **Copy Last Synced**
-- **Pause Sync** / **Resume Sync** — label changes dynamically
+- **Toggle Sync**
 - **Upgrade to Pro** on Lite plans
 - **Quit**
 
@@ -52,13 +52,22 @@ What it does:
 
 ## Keyboard shortcuts
 
-### Ctrl+B: Toggle Sync
+### Cmd+Shift+S / Ctrl+Shift+S: Toggle Sync
 
-By default, **Ctrl+B** pauses or resumes clipboard sync.
+By default, **Cmd+Shift+S** (macOS) or **Ctrl+Shift+S** (Windows/Linux) pauses or resumes clipboard sync.
 
 You can change this shortcut in **Settings → General → Toggle Sync Hotkey**.
 
 If the hotkey changes, restart Clipshot.
+
+### Cmd+B / Ctrl+B: Paste File Path
+
+By default, **Cmd+B** (macOS) or **Ctrl+B** (Windows/Linux) pastes the file path of the last synced clipboard content.
+
+How it works:
+1. You copy an image or file → Clipshot syncs it and saves to `~/.clipshot/sync/`
+2. Press **Cmd+B** → Clipshot temporarily puts the file path in clipboard, simulates Ctrl+V/Cmd+V, then restores original clipboard
+3. The path (e.g. `~/.clipshot/sync/img_20260502_339b.png`) is pasted into your editor/terminal
 
 ### Header: Pause/Resume button
 
@@ -78,4 +87,4 @@ Button behavior:
 
 ### Clipboard Toggle Hotkey
 
-Default: **Ctrl+A** — toggles clipboard between image/file content and the sync file path. Useful for pasting images directly into chat apps. Change in Settings → General → Clipboard Toggle Hotkey.
+Default: **none** (not set). Toggles clipboard between image/file content and the sync file path. Useful for pasting images directly into chat apps. Configure via `clipboard_hotkey` in `settings.toml` (not exposed in the GUI). Example: `clipboard_hotkey = "ctrl+a"`.

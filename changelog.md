@@ -3,6 +3,31 @@ layout: default
 title: Changelog
 nav_order: 10
 ---
+## v0.7.3
+
+### Major: iroh 1.0 Migration + Native QUIC
+
+Complete rewrite of the P2P transport layer.
+
+- **iroh 1.0.0-rc.0** — latest P2P networking library
+- **Native QUIC sync** — `write_all`/`read_to_end` replaces legacy chunked transfer code
+- **-10,000+ LOC removed** — deleted legacy transport, chunked transfer, PeerManager, AsyncPeer
+- **Parallel broadcast** — all peers notified concurrently instead of sequentially
+- **Non-blocking clipboard** — clipboard detection never blocks on network I/O (BroadcastQueue)
+- **Consistent filenames** — sender generates `img_YYYYMMDD_HASH.ext`, receiver uses same name
+- **Post-quantum opt-in** — `cargo build --features pq` enables ML-KEM + X25519 hybrid key exchange
+- **ConnectionTracker** — lightweight replacement for PeerManager
+- **Tick stages** — Clipboard → FastOps → IncomingAndGossip → BroadcastPending → SlowReconnect
+- **`broadcast_queue_size` setting** — 1–10 (default 1), controls clipboard items queued for delivery
+- **EndpointHooks** — device limit enforcement on outbound connections via iroh hooks
+- **Transport badge** — shows "QUIC" instead of misleading "Direct"
+- **Latency** — RTT from native QUIC broadcast time
+- **Peer names** — iroh hex → friendly name via registry fallback
+
+### Stats
+- 1520 Rust + 247 Vitest tests
+- 20MB byte-exact proven through 3-hop mesh chain
+
 ## v0.7.0
 
 ### Added
