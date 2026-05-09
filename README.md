@@ -15,7 +15,7 @@ curl -fsSL https://clipshot.cc/install.sh | bash
 
 **Pair two devices:**
 1. On device A: open GUI → Pair Device → Generate Code
-2. On device B: enter the code (GUI or `clipshot pair WORD-WORD-00`)
+2. On device B: enter the code (GUI or `clipshot pair <YOUR-CODE>`)
 3. Done — clipboards sync automatically
 
 **Or create a new account:**
@@ -43,7 +43,7 @@ clipshot
 clipshot daemon --port 19231 --http-port 15282
 
 # CLI commands
-clipshot pair WORD-WORD-00      # Pair with another device
+clipshot pair <YOUR-CODE>      # Pair with another device
 clipshot share-uri              # Generate share link
 clipshot push "hello"           # Send text to peers
 clipshot history                # Show sync history

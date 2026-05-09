@@ -62,7 +62,7 @@ Supported platforms:
 
 For Windows, use the binary download method below.
 
-If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair WORD-WORD-00` to join an existing group, then `clipshot service install` to set up auto-start.
+If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair <YOUR-CODE>` to join an existing group, then `clipshot service install` to set up auto-start.
 
 ### Auto-start behavior
 
@@ -156,7 +156,7 @@ Recommended flow:
 
 1. On an already connected device, open **Pair device** from the sidebar or **Add Device** from the Peers page.
 2. Go to **Pair Code** and click **Generate Code**.
-3. Clipshot shows a code like `WORD-WORD-00`.
+3. Clipshot shows a code like `<YOUR-CODE>`.
 4. On the new device, open Clipshot and click **Pair with another device**.
 5. Enter the code and click **Join**.
 6. Clipshot shows **Paired!** and restarts.
@@ -165,7 +165,7 @@ Recommended flow:
 About the generated code:
 - it is valid for **5 minutes**
 - the dialog also lets you copy:
-  - `clipshot pair WORD-WORD-00`
+  - `clipshot pair <YOUR-CODE>`
 
 ### Alternative: enter token manually
 
