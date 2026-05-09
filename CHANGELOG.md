@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.7.5] - 2026-05-09
+
+### 🚀 Install Without Pair Code
+- `curl -fsSL https://clipshot.cc/install.sh | bash` — works without `--code`
+- First-time install opens browser for account creation (`clipshot setup`)
+- After install shows unique pair code for adding second device
+- Portal: Setup Sessions API (POST/GET /api/setup/sessions)
+
+### 🔐 Pair Code Dictionary Expanded
+- 64 → 256 adjectives, 64 → 256 nouns, 90 → 990 numbers
+- **64.8M unique codes** (was 368K) — near-zero collision risk
+- Zero overlap between adjective and noun word lists
+- Retry on collision (PRIMARY KEY constraint)
+
+### 🐛 Bug Fixes
+- Relay fixed: container must be on `bundle_spex` Docker network
+- Reconnect hot loop: `on_connected()` called after `connect_to_addr()`
+- Canonical + full addr both registered in ConnectionMonitor
+- Removed `WORD-WORD-00` placeholder from all user-facing docs
+
+### 📚 Documentation
+- Compact screenshots (1000×700), fresh annotations
+- Deploy skill updated: Windows on main, dual landing paths, relay instructions
+- install.sh shows `<YOUR-CODE>` not `WORD-WORD-00`
+
+---
+
 ## [0.7.4] - 2026-05-09
 
 ### 🚀 Non-Blocking Clipboard Broadcast
