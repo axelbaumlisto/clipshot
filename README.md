@@ -75,8 +75,8 @@ cargo build --release --no-default-features --features iroh  # Headless
 
 | Suite | Count | Command |
 |-------|-------|---------|
-| Rust unit | 1459 | `cargo test --lib` |
-| Vitest | 232 | `cd web && bun x vitest run` |
+| Rust unit | 1520 | `cargo test --lib` |
+| Vitest | 247 | `cd web && bun x vitest run` |
 | Docker API E2E | 43 | `npx playwright test --project=docker-api` |
 | Stress | 542 | `scripts/stress-test.sh 50` |
 
