@@ -1,126 +1,129 @@
----
-layout: default
-title: Changelog
-nav_order: 10
----
-## v0.7.0
-
-### Added
-- **Mesh auto-relay**: every node can relay for group peers
-- **N0 public relay fallback**: 4 free global relay regions via iroh
-- **VPN-aware networking**: automatic Tailscale, WireGuard, ZeroTier detection
-- **Standalone local pairing**: `LOCAL_WORD_NN` codes, no Portal needed
-- **Local-only GUI mode**: "Use on local network only" — works without account
-- **mDNS auto-scan**: daemon scans every 60s, auto-adds peers
-- **Install script**: `--uri`, `--code=LOCAL_*`, `--addr` flags
-- **PairDialog**: 3 tabs (Pair Code | Local Pair | Scan LAN)
-- **Mesh forwarding**: 20MB through 3-hop chain proven in E2E
-- **Sleep/wake detection**: tick gap >10s triggers immediate reconnect
-- **Peer name dedup**: duplicate names get device_type suffix
-- **Version badge**: sidebar shows daemon version
-- **musl static build**: Linux binary works on any distro
-
-### Changed
-- **Free tier**: 3 devices (was 2), max_file_size 10MB (was 50MB)
-- **Health check**: all peers per tick, cap 5 (was one per tick)
-- **Dead peer cleanup**: immediate via is_dead() (was 5min stale threshold)
-- **PNG compression**: None (was Jpeg{90} — dead code removed)
-- **Text sync**: always saved to file (headless fix)
-- **Burst reconnect**: 3 peers when isolated (was 1)
-
-### Fixed
-- Stale iroh address after peer restart (merge replaces enriched)
-- Handshake collision backoff loop (Transient accept error)
-- Startup race: deterministic tie-breaker (lower node_id initiates)
-- Event loop hang when iroh accept dies
-- Docker address explosion (enumerate_interfaces + classify)
-
-### Stats
-- 1685 Rust + 247 Vitest tests
-- 10-node mesh E2E, 20MB 3-hop chain, 5min keepalive proven
-- 18 code fixes this release
-
-## v0.5.1
-
-### Added
-- **Device Auth Flow**: `curl -fsSL clipshot.cc/install.sh | bash` works without `--code`; opens browser for registration
-- **Google OAuth** on portal login/register/setup pages
-- **CLI `clipshot setup`** command for browser-based account creation
-- **CLI `clipshot update`** command for checking and installing updates
-- **GUI WelcomeScreen** now has a **Create Account** button for browser-based registration
-- **Tray menu**: added **Copy Last Synced** item
-- **Permissions commands**: `check_permissions`, `open_permission_settings`, `restart_app_for_permissions`
-- **HTTP route**: `GET /api/permissions` for permission status
-- **Group picker** for users with multiple groups on portal
-
-### Changed
-- `enable_iroh` serde default fixed: was `false`, now correctly defaults to `true`
-- `clipboard_hotkey` default changed from `a` to `ctrl+a`
-- Install script no longer requires `--code` parameter
-
-### Fixed
-- `hub_connected` fix for browser mode (`drain_hub_events`)
-- Portal `relay_enabled` auto-update on subscription change
-
-## v0.5.0
-
-### Added
-- Browser-mode and desktop UI parity improvements across Overview, Peers, History, and Settings
-- Compact header controls for sync state and peer presence
-- Storage retention settings for sync files: file count, max age, and max total size
-- Persistent outbox state so reconnect catch-up does not resend already-delivered items
-- GitHub Pages documentation site with split guides, search, and sidebar navigation
-
-### Changed
-- Documentation reorganized into task-focused pages instead of one long scrolling guide
-- Screenshots now use tighter presentation and consistent sizing rules in the site theme
-- Theme styling updated to match the main Clipshot website palette
-
-### Fixed
-- Catch-up sync duplicates after restart by persisting delivery state
-- Hotkey deadlock and pause/resume responsiveness issues in the GUI
-- Sync state desync between transfer activity and visible UI indicators
-- macOS permission/update edge cases around Input Monitoring and app identity
-
-## Earlier releases
-
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [0.7.4] - 2026-05-09
 
-## [0.2.2] - 2026-02-15
+### 🚀 Non-Blocking Clipboard Broadcast
+- Clipboard stage no longer blocks on network I/O (was 1-15s per broadcast)
+- New `BroadcastQueue` (SRP): bounded FIFO send buffer, configurable 1-10 items
+- New `BroadcastPending` tick stage sends queued items in network phase
+- 4 rapid screenshots → all 4 saved locally + all 4 delivered (zero loss)
 
-### Added
-- Configurable transfer timeouts for large file transfers
-  - `transfer_timeout_per_mb_ms` - timeout per MB (default 500ms)
-  - `transfer_timeout_base_ms` - base timeout (default 5000ms)
-  - `chunk_timeout_secs` - chunk-level timeout (default 120s)
-- GUI: Advanced Transfer Settings section in Sync Settings
-- HTTP API: New timeout fields in POST /api/settings
-- CLI: `clipshot config transfer_timeout_per_mb_ms 1000`
+### 🔧 Consistent Filenames Across Nodes
+- Sender includes real filename (`img_YYYYMMDD_HASH.png`) in wire header
+- Receiver uses sender's filename directly (was generating different name)
+- Image content type preserved on receive (was converting Image → File)
 
-### Fixed
-- 100MB stress test now passes reliably (205s transfer time)
+### 🔐 Post-Quantum Key Exchange
+- `cargo build --features pq` enables ML-KEM + X25519 hybrid via aws-lc-rs
+- Default build uses ring (lighter, better cross-compile)
 
-## [0.2.1] - 2026-02-15
+### ⚙️ New Setting: broadcast_queue_size
+- Default: 1 (only latest clipboard item, previous dropped)
+- Max: 10 (keep recent items in queue)
+- Available in GUI Settings → Sync section
 
-### Added
-- PeerRegistry: Single source of truth for peer configuration
-- GUI event loop for bidirectional clipboard sync
-- Clipboard polling in GUI daemon
+### 🐛 Bug Fixes
+- Fixed reconnect hot loop (1700+ reconnects/sec blocking clipboard)
+- Fixed ConnectionMonitor max_peers=3 blocking all outbound on gene
+- Fixed gene visibility (was filtered as transient peer)
 
-### Fixed
-- GUI daemon receiving peer content
-- Bidirectional sync (Mac <-> Docker)
+### 📚 Documentation
+- Full CLAUDE.md audit: test counts, features, modules, settings, architecture decisions
+- Screenshots retaken: settings (broadcast_queue_size), peers (QUIC), pair dialog (3 tabs)
+- Token redacted from all screenshots
 
-## [0.2.0] - 2026-02-14
+---
 
-### Added
-- Unified binary architecture (GUI + CLI in one)
-- P2P v2 mesh networking with chunked transfer
-- Tauri GUI with system tray
-- Display auto-detection (Linux/macOS/Windows)
-- Unified `clipshot://` URI format (GUI + CLI + HTTP API)
+## [0.7.3] - 2026-05-08
 
-### Changed
-- No feature flags - all functionality included by default
+### 🚀 Major: iroh 1.0 Migration + Native QUIC
+
+Complete rewrite of the P2P transport layer. Replaced legacy chunked protocol
+with native QUIC streams via iroh 1.0.0-rc.0.
+
+#### Highlights
+- **iroh 1.0.0-rc.0** — latest P2P networking library
+- **Native QUIC sync** — `write_all`/`read_to_end` replaces 6000+ LOC of chunked transfer code
+- **-10,000+ LOC removed** — deleted legacy transport, chunked transfer, PeerManager, AsyncPeer
+- **20MB byte-exact** proven through 3-hop mesh chain (Docker) and production relay
+- **Parallel broadcast** — all peers notified concurrently instead of sequentially
+- **ConnectionTracker** — lightweight replacement for PeerManager (298 LOC vs 1856)
+
+#### Transport
+- Native QUIC streams via `clipshot/sync/1` ALPN protocol
+- `wire.rs` — postcard binary header format (ContentHeader)
+- `sync_protocol.rs` — send_content/receive_content/push_content_to_peer
+- `sync_handler.rs` — iroh ProtocolHandler for Router
+- Connection drop race fix in sync_handler (proper stream lifetime management)
+- Broadcast timeout scales with content size (15s base + 5s per MB)
+- Skip recently failed peers (5min cooldown) to avoid timeout waste
+
+#### Security & Limits
+- `EndpointHooks` — device limit enforcement on outbound connections via iroh hooks
+- `ClipshotHooks` with `before_connect` policy (12 TDD tests)
+
+#### Relay
+- iroh-relay upgraded from 0.96 to 1.0.0-rc.0
+- Caddy h1-only ALPN for relay.clipshot.cc WebSocket upgrade
+
+#### Deleted (legacy)
+- `iroh_transport.rs`, `iroh_factory.rs`, `handshake.rs`, `codec.rs` (protocol/)
+- `chunked.rs` (transfer/)
+- `content_handler.rs`, `content_send.rs`, `content_recv.rs`, `content_chunked.rs` (peer/)
+- `failover.rs`, `probe.rs` (relay/)
+- `connection_coordinator.rs` (daemon/)
+- `manager.rs`, `broadcast_engine.rs`, `peer_index.rs`, `receive_loop.rs` (manager/)
+- `AsyncPeer`, `PeerSender`, `PeerReceiver`, `PeerHealth` traits
+- `converter.rs`, `dedup.rs` (peer/)
+- `role.rs`, `factory.rs` (protocol/)
+- `transport/` module (DataTransport, mock)
+- `transfer/` module (BoundedQueue)
+- `test_helpers.rs`
+- Legacy integration tests (`iroh_integration.rs`, `iroh_stress_test.rs`)
+- Dead Message variants: ChunkStart, ChunkProgress, ChunkComplete, ChunkCompleteAck, ContentWithMeta
+- `process_accepted_peers`, `AcceptedPeer`, legacy health check
+
+#### GUI Fixes
+- **Latency measurement** — RTT from native QUIC broadcast time (not legacy Ping/Pong)
+- **Peer names resolved** — iroh hex → friendly name via registry fallback search
+- **"Unknown device"** eliminated from Overview, History, Peers
+- **Tray icon stable** — no more NoPeers↔Idle flapping
+- **"Last sync: just now"** — timestamp updated after each native sync
+- **Device type** — removed misleading "Laptop" label when unknown
+- **Transport badge** — shows "QUIC" instead of misleading "Direct"
+- **Legacy settings hidden** — Transfer timeouts, Retry Attempts, Timeout (ms)
+- **Addresses populated** — primary address shown when alternate list empty
+- **Parallel broadcast** — 3 peers in 15s max (was 45s sequential)
+- **Sync state** — uses native_connected_peers count (was always "no_peers")
+
+#### Infrastructure
+- iroh-relay 1.0 Docker image on spex
+- systemd user service on main and gene
+- Root daemon cleanup on main
+- Stale peer cleanup across all nodes
+- 20MB mesh forwarding: container (no internet) → main → gene byte-exact
+
+#### Tests
+- `native_sync_test.rs` — 3 integration tests (text, 1MB, bidirectional)
+- `hooks.rs` — 12 TDD tests for EndpointHooks
+- `connection_tracker.rs` — 7 TDD tests
+- `wire.rs` — 5 ControlMessage serde tests
+- Docker E2E: 3-node text sync + 20MB byte-exact verified
+
+## [0.7.2] - 2026-05-05
+
+- Native QUIC sync protocol (wire.rs, sync_protocol.rs, sync_handler.rs)
+- Router + ProtocolHandler integration
+- ConnectionCoordinator for duplicate prevention
+- Streaming chunks (removed per-window ACK)
+- Relay retry 3x with 2s delay
+- Caddy h1-only ALPN fix for relay
+
+## [0.7.1] - 2026-04-29
+
+- device_id persistent identity
+- effective_relay_url auto-derives from hub_url
+- Portal device_id in PeerInfo broadcasts
+- Zombie dedup in portal DB
+- max_file_size sync on subscription
+- Chunked transfer explicit failure (hash mismatch → ChunkComplete{hash=0})
