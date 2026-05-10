@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.7.6] - 2026-05-10
+
+### 🚀 Connectivity Reliability
+- Central `relay_url` is now stored separately from direct addresses and is never auto-cleared.
+- Bare `iroh://<node>` addresses are rebuilt into full relay-aware connect URLs at connection time.
+- Connection-refused cleanup now removes only stale direct addresses, preserving the central relay path.
+- Removed the "hub down → strip relay" behavior that made relay peers disappear after transient hub outages.
+
+### ⚡ Broadcast & UX
+- Detached `BroadcastWorker` sends clipboard updates outside the tick loop, so slow peers no longer block local clipboard polling.
+- Tray/Dock Sending state appears immediately on copy and returns to Idle after the first confirmed peer delivery.
+- Broadcast uses live peer cache, including hub-discovered/transient peers.
+- Large screenshots and files continue sending even when one relay peer is slow or temporarily unavailable.
+
+### 🐛 Fixes
+- Fixed spex/main/gene visibility loss caused by stale bare Iroh addresses.
+- Fixed stuck Sending indicator when a slow relay peer never completed.
+- Fixed reconnect state honesty: Online reflects real sync delivery instead of handshake-only success.
+- Extended stale connection expiry to reduce idle UI flapping.
+
+### ✅ Verification
+- 1527 Rust lib tests passing.
+- Clippy clean with `-D warnings`.
+- Production test: macOS → gene/main/spex all confirmed via native QUIC relay/direct broadcast.
+
+---
+
 ## [0.7.5] - 2026-05-09
 
 ### 🚀 Install Without Pair Code
