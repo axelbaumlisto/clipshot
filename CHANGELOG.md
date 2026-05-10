@@ -16,6 +16,7 @@
 
 ### 🐛 Fixes
 - Fixed spex/main/gene visibility loss caused by stale bare Iroh addresses.
+- Fixed idle UI flicker where sync-proven devices disappeared after TTL despite the next relay sync succeeding.
 - Fixed stuck Sending indicator when a slow relay peer never completed.
 - Fixed reconnect state honesty: Online reflects real sync delivery instead of handshake-only success.
 - Extended stale connection expiry to reduce idle UI flapping.
