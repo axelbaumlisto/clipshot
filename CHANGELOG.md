@@ -1,4 +1,137 @@
+## v0.8.21 — 2026-05-13
+
+### Unified Device Removal
+- **PeerRemoved P2P gossip** — remove a peer from any node, all connected peers learn via native QUIC
+- **Hub RemoveDevice** — removal propagates through portal to all group members
+- **PeerRemovedFromGroup** — distinct hub message for explicit removal (vs soft disconnect)
+- **No gossip loop** — receivers remove locally without re-broadcasting
+- **Portal dashboard delete** — "Remove" button deletes node + broadcasts to all peers
+- **device_id canonical identity** — portal deduplicates by device_id, not node_id
+
+### Security
+- **SQL injection fix** — portal remove_device uses parameterized queries (was format!)
+
+### Pair Flow Fixes
+- **pair_confirm hub reconnect** — generator connects to hub after writing provisional token
+- **reconnect_hub reads settings** — fills missing hub_url/token from settings.toml
+
+### UI
+- **Tray menu "Manage Account"** — replaces "Upgrade to Pro", checks is_pro from hub cache
+- **Onboarding overlay** — 4-slide guide after first pair (Cmd+B comparison table)
+
+### Documentation
+- **Cmd+B / Ctrl+B** paste path hotkey fully documented
+- **macOS permissions** — Input Monitoring + Accessibility requirements
+- **Registration flow** — setup, OAuth, dashboard, link account, Free vs Pro
+- **Quick Start Guide** — first section of USER_GUIDE
+
+### Tests
+- Rust: 1637, Vitest: 271, Portal: 35
+- E2E: 23 scenarios (pair, sync, remove, portal, collisions, dedup)
+
+## v0.8.2 — 2026-05-12
+
+### Group Token Flow
+- **group_token in PairOffer**: joiner adopts generator's token automatically
+- **Deferred token write**: pair_generate holds token in memory, persists only on pair_confirm (prevents UI flash)
+- **group_switch warning**: PairDialog shows yellow banner when joining a different group
+- **mDNS carries group_token** in TXT record for LAN pairing
+- **Hub without registration**: any non-empty token gets hub + relay access (anonymous group auto-created)
+
+### Portal
+- **link-group updates anonymous groups**: claims ownership on account registration
+- **link-group creates group row**: dashboard shows group immediately after link
+- **Setup page accepts existing token**: pre-fills from URL param
+- **Dashboard token card**: prominent "YOUR GROUP TOKEN" with copy button after login
+
+### UI Improvements
+- **Loading spinner** in AppContent before settings resolve (no more WelcomeScreen flash)
+- **Copy button** for group_token in Settings page
+- **TransferIndicator** in header: shows active transfer progress (↑ img.png 439KB/1.2MB)
+- **connection_type detection**: relay vs direct based on address pattern
+- **device_type inference**: server/desktop heuristic from peer name
+- **Transport labels**: "Relay · QUIC" / "Direct · QUIC" in peer details
+- **Latency display**: shows "—" instead of "Measuring..." when unavailable
+
+### Infrastructure
+- **install.sh**: --code optional, --token flag for direct token setup, v0.8.2 banner
+- **Windows NSIS installer**: 5.1MB installer with Start Menu shortcuts + uninstaller
+- **broadcast_queue_size**: now settable via HTTP API (validation 1-10)
+- **RTT consolidation**: ConnectionMonitor is single source of truth, 47 lines dead code removed
+
+### Tests
+- Rust: 1616 → 1634 (+18)
+- Vitest: 247 → 262 (+15)
+- Portal: 35
+
 # Changelog
+
+## [0.8.1] - 2026-05-12
+
+### 🐛 Relay Reconnect Resilience
+- Central relay (`relay.clipshot.cc`) is no longer permanently blacklisted after temporary downtime
+- Relay connect attempts increased from 3 to 5 with exponential backoff (2s→4s→8s→16s = 30s window)
+- Periodic health reset every 5 minutes ensures central relay is always retried
+- Peer relays still blacklisted after repeated failures (prevents hot-loop on dead peer relays)
+
+### ✅ Verification
+- 1612 Rust tests pass, clippy clean
+- RED→GREEN TDD: `test_reset_failures_clears_counter`, `test_connect_via_relay_does_not_blacklist_central_relay`
+
+## [0.8.0] - 2026-05-11
+
+### 🚀 Unified Pairing (pair-v2) — Breaking Change
+
+Complete rewrite of the pairing subsystem. One numeric 6-digit code replaces all
+previous pairing mechanisms (portal WORD-WORD-NN codes, LOCAL_WORD_NN LAN codes,
+tabbed UI). Pairing no longer requires a Portal account — `group_token` is
+generated locally at first pair and accounts can be linked later.
+
+#### New pairing API surface
+- `POST /api/pair/generate` → `{code, digits, expires_in_secs}`
+- `POST /api/pair/join` → `{digits, peer_addr}`
+- `POST /api/pair/abort` → best-effort cancellation after confirmation mismatch
+- Tauri commands: `pair_generate`, `pair_join`, `pair_abort`
+- CLI: `clipshot pair` / `clipshot pair 482917` (6-digit numeric)
+
+#### New pairing architecture
+- `src/pair_v2/` module tree: `code.rs`, `digits.rs`, `offer.rs`, `handshake.rs`, `broker.rs`, `runtime.rs`
+- `PairBroker` races multiple discovery transports (mDNS + Portal `/api/pair/v2`)
+- `PairDiscovery` trait with `InMemoryDiscovery`, `MdnsDiscovery`, `PortalDiscovery` implementations
+- X25519 keypair + DH shared secret → 4-digit confirmation digits for MITM detection
+- `ensure_group_token()` generates local UUID at pair time (account-decoupled onboarding)
+
+#### Removed legacy pairing
+- Deleted `src/pair.rs` and `src/http/handlers_local_pair.rs`
+- Removed Tauri commands: `pair_generate_code`, `pair_join_code`, `pair_generate_local`, `pair_join_local`
+- Removed HTTP routes: `/api/local-pair/generate`, `/api/local-pair/join`
+- Removed tabbed PairDialog UI (Pair Code / Local Pair / Scan LAN tabs)
+- Removed `joinOnly`, `defaultTab` props from PairDialog/AddPeerDialog
+- Removed discover tab from AddPeerForm
+
+#### UI changes
+- PairDialog: 2-button menu (Generate code / Enter code) → generate/join/verify flow
+- WelcomeScreen: primary CTA is "Connect your first 2 devices" (no create-account)
+- SettingsPage: "Sign in to link this group" action when group_token exists
+- AddPeerForm: flat layout with pair code + advanced section (paste URI / manual)
+
+#### Portal side (clipshot_portal)
+- `POST /api/pair/v2` + `GET /api/pair/v2/:code` (publish/resolve pair offers)
+- `POST /api/account/link-group` + `GET /api/account/groups` (deferred account linking)
+- Legacy `/api/pair` preserved for backward compatibility (pending removal window)
+
+### 🐛 Resilience fixes
+- **Iroh listener auto-restart**: detect socket closure reactively via `endpoint.is_closed()` instead of waiting for the 120s watchdog stall.
+- **Cmd+B echo loop**: `paste_file_path` no longer triggers a duplicate broadcast of the same image.
+- **mDNS self-discovery pollution**: address validator rejects loopback, unspecified, x.x.x.0 and port 0.
+- **Peer registry one-time GC**: invalid legacy entries dropped at `PeerStore::load` time.
+- **Peer-relay blacklist**: `find_peer_relay_url` skips known-dead relays.
+
+### ✅ Verification
+- Rust: `cargo test --lib` — 1603 passed, `cargo clippy --all-targets -- -D warnings` clean.
+- Frontend: 247 vitest tests passed, `tsc --noEmit` clean.
+- E2E: `pair-v2-portal-test.sh` passes (code exchange + digit parity + joiner connectivity).
+- E2E: `pair-v2-lan-test.sh` SKIP (Docker mDNS multicast limitation).
 
 ## [0.7.6] - 2026-05-10
 
