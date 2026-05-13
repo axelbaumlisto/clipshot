@@ -15,17 +15,15 @@ curl -fsSL https://clipshot.cc/install.sh | bash
 ```
 
 **Pair two devices (no account needed):**
-1. On device A: `clipshot pair --local` → get `LOCAL_MOON_42`
-2. On device B: `clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080`
-3. Done — clipboards sync automatically
+1. On device A: `clipshot pair` → shows code like `482 917`
+2. On device B: `clipshot pair 482917`
+3. Compare the 4 confirmation digits on both screens → Done
 
-**Or with Portal account:**
-1. On device A: open GUI → Pair → Generate Code
-2. On device B: enter the code (GUI or `clipshot pair BLUE-FISH-42`)
+Clipboards sync automatically. No account, no server, no configuration.
 
-**Or create a new account:**
+**Optional: register for web dashboard:**
 ```bash
-clipshot setup   # opens browser for registration
+clipshot setup   # opens browser → sign in with Google/GitHub/email → done
 ```
 
 ## Features
@@ -34,10 +32,13 @@ clipshot setup   # opens browser for registration
 - **P2P mesh** — devices connect directly via QUIC (iroh), no cloud relay needed
 - **Works without internet** — local network (mDNS), share URI, or manual add
 - **GUI + CLI** — desktop app with tray icon, or headless daemon for servers
-- **Hub discovery** — devices find each other automatically via Portal (optional)
-- **Pair codes** — zero-config pairing: Portal codes or local `LOCAL_WORD_NN` (no account)
+- **Hub discovery** — devices find each other via Portal without an account (group token auto-created at first pair)
+- **Pair codes** — one 6-digit numeric code, no account needed, DH-verified
 - **Catch-up** — missed syncs delivered on reconnect
-- **Cross-platform** — macOS, Linux, Windows
+- **Paste as path** — `Cmd+B` / `Ctrl+B` pastes the synced file path instead of image data (great for chat attachments, terminal commands, file uploads)
+- **Cross-platform** — macOS (DMG), Linux (binary), Windows (NSIS installer or portable binary)
+- **Transfer indicator** — header shows live progress while syncing (↑ img.png 450KB/1.2MB)
+- **`install.sh --token`** — install + join a group in one command: `curl ... | bash -s -- --token=clip_xxx`
 
 ## Usage
 
@@ -49,12 +50,11 @@ clipshot
 clipshot daemon --port 19231 --http-port 15282
 
 # CLI commands
-clipshot pair <YOUR-CODE>      # Pair via Portal
-clipshot pair --local           # Generate local pair code (no account)
-clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # Join local
-clipshot share-uri              # Generate share link
-clipshot push "hello"           # Send text to peers
-clipshot history                # Show sync history
+clipshot pair              # Generate 6-digit pair code
+clipshot pair 482917       # Join with code from other device
+clipshot share-uri         # Generate share link
+clipshot push "hello"      # Send text to peers
+clipshot history           # Show sync history
 ```
 
 ## Build
@@ -75,10 +75,10 @@ cargo build --release --no-default-features --features iroh  # Headless
 
 | Suite | Count | Command |
 |-------|-------|---------|
-| Rust unit | 1520 | `cargo test --lib` |
-| Vitest | 247 | `cd web && bun x vitest run` |
-| Docker API E2E | 43 | `npx playwright test --project=docker-api` |
-| Stress | 542 | `scripts/stress-test.sh 50` |
+| Rust unit | 1637 | `cargo test --lib` |
+| Vitest | 271 | `cd web && bun x vitest run` |
+| Docker API E2E | 43 | `bun x playwright test --project=docker-api` |
+| Stress | 500 | `tests/e2e/scripts/overnight-pair-v2-stress.sh` |
 
 ## License
 
