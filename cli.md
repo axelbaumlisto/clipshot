@@ -22,23 +22,19 @@ Useful optional flags include:
 
 ### Pairing via CLI
 
-**Portal pair code** (requires account):
+Generate a 6-digit pair code on this device:
 
 ```bash
-clipshot pair              # generate code
-clipshot pair BLUE-FISH-42 # join
+clipshot pair
 ```
 
-**Local pair code** (no account needed):
+Join with a code from another device:
 
 ```bash
-clipshot pair --local                                    # generate LOCAL_MOON_42
-clipshot pair --local LOCAL_MOON_42                      # join (mDNS auto-find)
-clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # join (direct IP)
-clipshot pair --local LOCAL_MOON_42 --addr 100.64.0.5:18080    # join (Tailscale)
+clipshot pair 482917
 ```
 
-Code format: `LOCAL_` prefix = resolved locally via HTTP API. No prefix = Portal.
+Both devices display 4 confirmation digits after pairing — compare them to verify no MITM. No account required; pair works via Portal relay or local mDNS automatically.
 
 After joining, start the daemon or relaunch the GUI.
 

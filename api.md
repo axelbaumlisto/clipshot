@@ -244,20 +244,25 @@ Validation:
 - `RetryTransferRequest.file_path`: 1..4096 chars
 - `CopyToClipboardRequest.text`: 1..1_000_000 chars
 
-### Local pair routes (`src/http/handlers_local_pair.rs`)
+### Pair routes (pair-v2, `src/http/handlers_pair_v2.rs`)
 
-Standalone pairing without Portal. Code format: `LOCAL_WORD_NN`.
+Unified pairing API for GUI, browser UI, and CLI. Code is a 6-digit numeric string.
 
 | Method | Path | Body | Response |
 |---|---|---|---|
-| POST | `/api/local-pair/generate` | – | `{code, addresses[], expires_in_secs}` |
-| POST | `/api/local-pair/join` | `{code, iroh_addr, name}` | `{iroh_addr, name}` of generator |
+| POST | `/api/pair/generate` | – | `{code, digits: null, expires_in_secs}` |
+| POST | `/api/pair/join` | `{code}` | `{digits, peer_addr, joiner_eph_pub_hex}` |
+| POST | `/api/pair/poll` | `{code}` | `{ready, joiner_eph_pub_hex, joiner_iroh_addr}` |
+| POST | `/api/pair/confirm` | `{code, joiner_eph_pub_hex, joiner_iroh_addr?}` | `{digits}` |
+| POST | `/api/pair/abort` | `{code}` | `{aborted, code}` |
 
-Behavior:
-- Generate creates a one-time code (TTL 5 min, max 5 wrong attempts)
-- Join verifies code, exchanges iroh addresses, auto-adds peer
-- Code consumed after successful join
-- Rate limit: 5 failed attempts → code revoked
+Notes:
+- `code` is a numeric 6-digit string (`^[0-9]{6}$`)
+- `generate` stores an ephemeral X25519 keypair and returns `digits: null` (unknown until joiner arrives)
+- `join` performs X25519 DH, pushes joiner eph_pub to portal, adds generator as peer
+- `poll` is called by generator to detect joiner arrival via portal
+- `confirm` computes DH with joiner eph_pub, derives 4 confirmation digits, adds joiner as peer (reciprocal)
+- `abort` cleans up local keypair; subsequent `confirm` returns 404
 
 ### Sync / transfer / paste routes
 
@@ -273,6 +278,7 @@ These require `CLIPSHOT_TEST_HOOKS=1` or return `403`.
 |---|---|---|---|
 | GET | `/api/test/clipboard` | – | clipboard snapshot: text returns `type/data/size`, binary returns `type/size` |
 | POST | `/api/test/reset` | optional `{"restore_peer_name"?,"restore_peer_addr"?,"max_peers_free"?}` | queues reset-state command |
+| POST | `/api/test/kill_iroh_listener` | – | kills the active iroh listener (forces iroh restart on next tick) |
 
 ### Tauri hotkey test-hook HTTP server
 

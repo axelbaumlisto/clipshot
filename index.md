@@ -18,13 +18,13 @@ nav_order: 1
 
 ```bash
 # With account:
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=BLUE-FISH-42
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=482917
 
-# Without account (local pair):
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+# Or pair after install:
+clipshot pair               # generate a code on this device
 ```
 
-Or open the GUI → **Pair device** → **Local Pair** → enter code.
+Or open the GUI → **Pair device** → **Enter code**.
 
 ---
 
@@ -32,10 +32,10 @@ Or open the GUI → **Pair device** → **Local Pair** → enter code.
 
 - **Instant sync** — text, images, files between your devices
 - **P2P encrypted** — data goes directly between devices (QUIC/TLS), never through a server
-- **No account needed** — works on local network with `LOCAL_WORD_NN` pair codes
+- **No account needed** — works on local network with 6-digit pair codes via mDNS
 - **Mesh forwarding** — data reaches all devices through connected peers, even across network boundaries
 - **Cross-platform** — macOS, Linux, Windows, headless servers, WSL
-- **Pair codes** — local (`LOCAL_MOON_42`) or portal (`BLUE-FISH-42`)
+- **Pair codes** — 6-digit numeric codes (e.g. `482917`), work via Portal or mDNS
 - **Catch-up** — missed syncs delivered on reconnect via outbox
 - **GUI + CLI** — desktop app with tray icon, or headless daemon
 

@@ -3,13 +3,41 @@ layout: default
 title: Troubleshooting
 nav_order: 7
 ---
+### Hotkeys not working (macOS)
+
+If **Cmd+Shift+S** (toggle sync) or **Cmd+B** (paste path) do nothing on macOS, the cause is almost always a missing macOS permission.
+
+**Check the PermissionBanner first**
+
+If any permission is missing, an amber banner appears at the top of the Clipshot window. Click the banner to open System Settings directly.
+
+**Grant permissions manually:**
+
+1. **System Settings → Privacy & Security → Input Monitoring**
+   - Click **+**, navigate to `/Applications/Clipshot.app`, and add it.
+   - Required for: all global hotkeys (Cmd+Shift+S, Cmd+B).
+
+2. **System Settings → Privacy & Security → Accessibility**
+   - Click **+**, navigate to `/Applications/Clipshot.app`, and enable the toggle.
+   - Required for: the paste simulation step in Cmd+B.
+
+3. **Restart Clipshot** after granting either permission.
+
+**After an app update:**
+
+macOS invalidates TCC permission entries when the app binary changes. Clipshot detects this on startup and resets the stale entries automatically — you may see the permission prompt again after an update. Re-grant the permissions and restart.
+
+**Headless mode:**
+
+Permissions are only required in the desktop GUI. `clipshot daemon` (headless) does not need Input Monitoring or Accessibility.
+
 ### No peers connected
 
 Check these first:
 - make sure at least one other device is online
 - verify both devices use the same **Group Token**
 - open **Settings → Connection** and confirm the hub shows **Connected**
-- open **Peers** and use **Add Device** or **Scan LAN**
+- open **Peers** and use **Add Device** or **Discover**
 - if you are on different networks, use Pair Code or the hub instead of LAN scan
 - if both devices share a VPN (Tailscale, WireGuard, ZeroTier), Clipshot detects VPN interfaces automatically — no relay or extra config needed
 

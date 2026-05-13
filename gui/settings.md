@@ -8,9 +8,9 @@ parent: Application
 
 The Settings page is split into collapsible cards. Clipshot remembers which sections you keep open or closed.
 
-<img src="../docs/images/settings-annotated.png" alt="Settings page annotated" class="img-wide">
+<img src="../docs/images/settings-annotated.png" alt="Settings page with Connection and General cards" class="img-wide">
 
-The annotated view highlights: ① **Connection** card with Hub Portal URL, Group Token, and subscription info. ② **General** card with theme, startup, and hotkey settings. At the bottom, **Save Changes** and **Reset to Defaults** buttons.
+The Settings page is organised into collapsible cards: **Connection** (Hub Portal URL, Group Token, subscription info), **General** (theme, startup, hotkey), **Sync**, **Storage**, **Network**, and **Advanced**. At the bottom are **Save Changes** and **Reset to Defaults** buttons.
 
 If you make changes, a sticky bar appears at the bottom with:
 - **Discard**

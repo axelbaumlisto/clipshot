@@ -87,99 +87,31 @@ Important:
 ### Adding a New Device
 
 Use either:
-- **Add Device**
-- **Discover**
+- **+ Add Device** button on the Peers page
 - the sidebar **Pair device** button
 
-All of them open the same add-device dialog.
+Both open the same Pair dialog.
 
-The dialog has **3 tabs** (or 2 without account):
-- **Pair Code** — Portal pair codes (requires account)
-- **Local Pair** — Local pair codes `LOCAL_WORD_NN` (no account needed)
-- **Scan LAN** — mDNS local network scan
+#### Pair dialog
 
-Plus **Advanced**: Paste Link + Manual Entry.
+![Pair dialog — dark theme](../docs/images/e2e-pair-dialog.png)
 
-When no account is configured, the Pair Code tab is hidden and Local Pair is default.
+The dialog has two buttons:
 
-#### Local Pair
+- **Generate code** — creates a 6-digit numeric code valid for **5 minutes**. The code is displayed as `NNN NNN` (e.g. `154 603`). While waiting, the dialog shows "Waiting for other device...".
+- **Enter code** — type the 6-digit code from another device and click **Join**.
 
-The recommended method when no account is configured.
+After both devices exchange codes they perform a Diffie-Hellman key exchange and each show **4 confirmation digits**. Compare the digits out-of-band (say them aloud, type them in chat, etc.):
 
-- Click **Generate Local Code** — shows `LOCAL_MOON_42` + your IP addresses + install one-liner
-- Or enter a code from another device + IP address, click **Join**
-- Code valid for 5 minutes, one-time use
-- Works on same LAN, Tailscale, any VPN
+- Digits match → click **Yes, they match** on both devices. Devices are now connected. ✓
+- Digits differ → click **No** and start over. Mismatched digits indicate the connection may have been intercepted.
 
-#### Pair Code
+The pair flow works across the internet (via Portal) and on local networks (via mDNS), automatically choosing the fastest available transport. No account required.
 
-<img src="../docs/images/add-device-pair.png" alt="Add Device — Pair Code tab" class="img-dialog">
-
-This is the recommended method.
-
-<img src="../docs/images/add-device-pair-annotated.png" alt="Add Device — Pair Code annotated" class="img-dialog">
-
-The callouts show: ① **Generate Code** — creates a short code valid for 5 minutes. ② Code input field — enter a code from another device, then click **Join**. ③ **Advanced** — expand for Paste Link and Manual Entry options.
-
-Inside the dialog:
-- existing devices can click **Generate Code**
-- any device can enter a code and click **Join**
-- generated codes show:
-  - the code itself
-  - **Valid for 5 minutes**
-  - a copyable CLI command
-
-Use Pair Code when:
-- adding your own laptop or phone-sized desktop companion
-- installing Clipshot on a remote machine
-- you want the simplest flow
-
-#### Local Network Scan
-
-<img src="../docs/images/add-device-discover.png" alt="Add Device — Local Network tab" class="img-dialog">
-
-The **Scan LAN** tab scans your LAN with mDNS.
-
-What you can do:
-- click **Scan**
-- see a list of found devices
-- select one or more checkboxes
-- click **Add Selected**
-
-Best for:
-- devices on the same home or office network
-- quick setup without sharing links
-
-Limits:
-- LAN only
-- does not help across the internet
-
-#### Paste Link
-
-In **Advanced → Paste Link**, you can paste:
-- `clipshot://...`
-- `iroh://...`
-
-Then click **Connect**.
-
-Use this when:
-- someone sent you a Clipshot share link
-- you want an advanced/manual pairing method
-
-#### Manual Entry
-
-In **Advanced → Manual Entry**, you can enter:
-- **Name**
-- **Address**
-- optional **Password**
-
-The address can be:
-- an `iroh://...` address
-- an IP address or hostname
-
-Use this when:
-- you already know the remote address
-- you are connecting to a protected node that requires a password
+Use the pair code flow when:
+- adding your own laptop or companion machine
+- installing Clipshot on a remote server
+- you want the simplest and most secure flow
 
 ### Device Details
 

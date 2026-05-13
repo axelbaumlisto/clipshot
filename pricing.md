@@ -15,7 +15,7 @@ What you get:
 - N0 public relay (4 global regions, free)
 - Tailscale / WireGuard / VPN — automatic, no config
 - mDNS local network auto-discovery
-- local pair codes (`LOCAL_WORD_NN`) — no account needed
+- 6-digit pair codes — no account needed
 - clipboard history (24h)
 - auto-update
 - **works without an account** — use on local network only

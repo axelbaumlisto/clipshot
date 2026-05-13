@@ -19,28 +19,25 @@ Best for:
 - remote servers
 - devices on different networks
 
-### Local Pair Code (no account needed)
+### Pair Code (6-digit, works everywhere)
 
-A Local Pair Code (`LOCAL_MOON_42`) lets you pair two devices without any account or portal.
+A 6-digit numeric pair code is the easiest way to connect two devices. No account required — the first pair automatically creates a local group identity.
 
 Flow:
-1. On device A: `clipshot pair --local` → get `LOCAL_MOON_42`
-2. On device B: `clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080`
-3. Done — devices sync automatically
+1. On device A: `clipshot pair` → shows code like `482 917`
+2. On device B: `clipshot pair 482917`
+3. Both devices display 4 confirmation digits — compare them to verify no MITM
+4. Done — devices sync automatically
+
+The pair flow uses the fastest available transport automatically:
+- Portal relay (works across the internet, no account required for pairing itself)
+- mDNS (same LAN, works without internet)
 
 Best for:
-- first-time setup without account
-- same network or Tailscale/VPN
-- headless servers
-
-### Portal Pair Code (requires account)
-
-A Portal Pair Code (`BLUE-FISH-42`) is the easiest way to put a new device into the same private group.
-
-Best for:
-- devices on different networks
-- using the one-line installer
-- adding devices to an existing account
+- any first-time setup
+- adding devices across different networks
+- using the one-line installer (`--code=482917`)
+- headless servers (same LAN, Tailscale, or any routable network)
 
 ### Share Link (`clipshot://`)
 
@@ -48,8 +45,8 @@ A `clipshot://` link is a shareable connection link.
 
 Typical flow:
 1. Generate it with `clipshot share-uri`.
-2. On another device, open **Peers → Add Device → Advanced → Paste Link**.
-3. Paste the link and click **Connect**.
+2. On another device, run `clipshot add-uri 'clipshot://...'` or open **Peers → Add Device** and enter the URI.
+3. The devices are connected.
 
 ### Local Network Scan (mDNS, LAN only)
 
@@ -57,7 +54,7 @@ Clipshot scans the local network for nearby devices using mDNS (`_clipshot._tcp.
 
 **Automatic mode:** When `auto_discover=true` and connected peers < free limit, the daemon scans every 60 seconds and auto-adds discovered peers.
 
-**Manual mode:** In the GUI, open **Pair → Scan LAN** to scan and select devices.
+**Manual mode:** In the GUI, click the **Discover** button on the Peers page to trigger an immediate LAN scan.
 
 Best for:
 - quick local setup
@@ -76,9 +73,8 @@ Use this when:
 
 | Method | Best for | Internet needed | Account needed | What you enter |
 |---|---|---:|---:|---|
-| Hub/Portal | automatic discovery | Yes | Yes | nothing after setup |
-| Local Pair Code | first setup, no account | No | **No** | `LOCAL_MOON_42` |
-| Portal Pair Code | adding across networks | Yes | Yes | `BLUE-FISH-42` |
+| Hub/Portal | automatic discovery | Yes | Optional | nothing after setup |
+| Pair Code | any new device | Best with; mDNS fallback | **No** | 6-digit code (`482917`) |
 | Share Link | advanced sharing | Usually | No | `clipshot://...` |
 | Local Network Scan | same LAN | No | No | just click Scan (auto every 60s) |
 | Manual Address | expert/manual setup | No | No | address + optional password |

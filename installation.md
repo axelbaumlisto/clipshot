@@ -9,19 +9,15 @@ Use the one-line installer if you want the fastest setup. Use the binary or sour
 
 ### One-liner (recommended)
 
-**With account (Portal pair code):**
+**With pair code (works with or without account):**
 
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=BLUE-FISH-42
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=482917
 ```
 
-**Without account (local pair code):**
+Get the code from another device: `clipshot pair` or GUI → Pair device → Generate code.
 
-```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
-```
-
-**Without account (share link):**
+**Without pair code (share link):**
 
 ```bash
 curl -fsSL https://clipshot.cc/install.sh | bash -s -- --uri='clipshot://node/...'
@@ -31,12 +27,10 @@ curl -fsSL https://clipshot.cc/install.sh | bash -s -- --uri='clipshot://node/..
 
 ```bash
 curl -fsSL https://clipshot.cc/install.sh | bash -s -- --headless --no-autostart
-clipshot pair --local LOCAL_MOON_42 --addr 192.168.1.10:18080  # local
-clipshot pair BLUE-FISH-42  # portal
-clipshot setup              # create account in browser
+clipshot pair 482917        # join using 6-digit code from another device
+clipshot pair               # or generate a new code on this device
+clipshot setup              # create account in browser (optional)
 ```
-
-Routing: codes starting with `LOCAL_` are resolved locally via HTTP API. Others go through Portal.
 
 What the installer does:
 1. downloads the correct binary for your OS and CPU
@@ -48,11 +42,11 @@ What the installer does:
 7. enables PID lock — only one daemon instance can run at a time
 
 Installer options:
-- `--code=CODE` — pair code: `BLUE-FISH-42` (Portal) or `LOCAL_MOON_42` (local)
+- `--code=CODE` — 6-digit pair code from another device (e.g. `482917`)
 - `--uri=URI` — share link from another device (no account needed)
-- `--addr=IP:PORT` — target device address (for local pair codes)
 - `--port=PORT` — daemon port (default 19231)
 - `--hub=URL` — hub URL (default https://clipshot.cc)
+- `--dist=URL` — override download base URL
 - `--headless` — bare binary only (no DMG/GUI)
 - `--no-autostart` — skip service creation
 
@@ -62,7 +56,7 @@ Supported platforms:
 
 For Windows, use the binary download method below.
 
-If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair <YOUR-CODE>` to join an existing group, then `clipshot service install` to set up auto-start.
+If you download the binary manually or build from source, pairing and service setup are not automatic. Run `clipshot setup` to create an account or `clipshot pair 482917` to join an existing group, then `clipshot service install` to set up auto-start.
 
 ### Auto-start behavior
 
@@ -128,44 +122,94 @@ Notes:
 - On macOS, `pngpaste` is highly recommended. Without it, copied images can become huge raw TIFF files and may fail to sync.
 - On Linux, if clipboard tools are missing, file sync may still work but live clipboard sync will not.
 
+### macOS permissions
+
+The desktop GUI requires two macOS privacy permissions for hotkeys to work:
+
+| Permission | Why | Where to grant |
+|---|---|---|
+| **Input Monitoring** | Global hotkey listener (Cmd+Shift+S, Cmd+B) | System Settings → Privacy & Security → Input Monitoring |
+| **Accessibility** | Simulates Cmd+V paste after Cmd+B | System Settings → Privacy & Security → Accessibility |
+
+When either permission is missing, an amber banner appears at the top of the app with an **Open Settings** shortcut and a **Restart** button. Grant both permissions and restart Clipshot.
+
+Headless daemon mode (`clipshot daemon ...`) does not require these permissions.
+
 ## First launch
 
 If Clipshot has no group token yet, it opens the **Welcome Screen** instead of the full dashboard.
 
 ### Welcome Screen
 
-![Welcome Screen](docs/images/welcome.png)
+![Welcome Screen — dark theme](docs/images/e2e-welcome.png)
 
 The Welcome Screen shows:
 - a short 3-step intro: **Pair → Connect → Sync**
-- a primary button: **Pair with another device**
-- a secondary button: **Create Account** — opens your browser for registration (Google OAuth supported)
-- a link: **Use on local network only** — skips account setup, enables local-only mode with mDNS discovery and local pair codes
+- a primary button: **Connect your first 2 devices** — opens the Pair dialog
+- a secondary link: **Already have an account? Sign in** — navigates to Settings to enter credentials
 - a collapsible section: **Enter token manually**
-- a link: **Open Settings**
+- a link: **Use on local network only** — skips account setup, enables local-only mode with mDNS discovery
+- a link: **Settings**
 
-![Welcome Screen annotated](docs/images/welcome-annotated.png)
+![Welcome Screen with Add Device dialog open](docs/images/welcome-annotated.png)
 
-The callouts above show: ① The intro card with the 3-step overview. ② **Pair with another device** — the recommended way to join an existing group. ③ **Create Account** — opens a browser-based registration flow. ④ **Enter token manually** — expand to paste an existing group token. ⑤ **Open Settings** — access settings before connecting.
+The image above shows the Welcome Screen with the **Add Device** dialog open. The dialog has two buttons: **Generate code** and **Enter code**.
 
 This screen is for joining an existing Clipshot group or creating a new account.
 
 ### Pairing your first device
 
-Recommended flow:
+**Step 1 — Open the Pair dialog**
 
-1. On an already connected device, open **Pair device** from the sidebar or **Add Device** from the Peers page.
-2. Go to **Pair Code** and click **Generate Code**.
-3. Clipshot shows a code like `<YOUR-CODE>`.
-4. On the new device, open Clipshot and click **Pair with another device**.
-5. Enter the code and click **Join**.
-6. Clipshot shows **Paired!** and restarts.
-7. After restart, the main app opens with the full dashboard.
+Click **Connect your first 2 devices** on the Welcome Screen (or **Pair device** in the sidebar if already set up). The Pair dialog opens.
 
-About the generated code:
-- it is valid for **5 minutes**
-- the dialog also lets you copy:
-  - `clipshot pair <YOUR-CODE>`
+![Pair dialog — dark theme](docs/images/e2e-pair-dialog.png)
+
+The dialog has two buttons:
+- **Generate code** — creates a 6-digit code on this device, valid for **5 minutes**.
+- **Enter code** — type the 6-digit code from another device.
+
+**Step 2 — Generate a code**
+
+On one device, click **Generate code**. The dialog shows the code and waits.
+
+![Pair code `154 603` displayed — dark theme](docs/images/e2e-pair-code-visible.png)
+
+**Step 3 — Enter the code on the second device**
+
+On the second device, click **Enter code**, type the 6 digits, and click **Join**.
+
+**Step 4 — Compare confirmation digits**
+
+Both devices show 4 confirmation digits derived from a Diffie-Hellman key exchange.
+
+- Digits match → click **Yes, they match** on both devices. ✓
+- Digits differ → click **No** and start the pair flow again.
+
+**Step 5 — Connected**
+
+After confirmation, both devices are connected and clipboard sync starts automatically.
+
+![Overview page after first connection — dark theme](docs/images/e2e-overview-connected.png)
+
+**Adding more devices:** click **Pair device** in the sidebar on any connected device and repeat steps 2–4. The Peers page shows all connected devices.
+
+![Peers page with two connected devices — dark theme](docs/images/e2e-peers-2nodes.png)
+
+### Connecting via Portal account (optional)
+
+A Portal account is not required, but it lets your devices auto-discover each other without sharing pair codes after the first setup.
+
+1. Run `clipshot setup` in a terminal, or click **Already have an account? Sign in** on the Welcome Screen.
+2. Your browser opens the Portal setup page.
+
+   ![Portal setup page — "Connect your device"](docs/images/portal-setup.png)
+
+3. Sign in with Google, GitHub, or email.
+
+   ![Portal sign-in page](docs/images/portal-login.png)
+
+4. Your device is linked to your Portal group. Other devices in the same group reconnect automatically.
 
 ### Alternative: enter token manually
 

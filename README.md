@@ -15,7 +15,7 @@ curl -fsSL https://clipshot.cc/install.sh | bash
 
 **Pair two devices:**
 1. On device A: open GUI → Pair Device → Generate Code
-2. On device B: enter the code (GUI or `clipshot pair <YOUR-CODE>`)
+2. On device B: enter the code (GUI or `clipshot pair 482917`)
 3. Done — clipboards sync automatically
 
 **Or create a new account:**
@@ -43,7 +43,7 @@ clipshot
 clipshot daemon --port 19231 --http-port 15282
 
 # CLI commands
-clipshot pair <YOUR-CODE>      # Pair with another device
+clipshot pair 482917      # Pair with another device
 clipshot share-uri              # Generate share link
 clipshot push "hello"           # Send text to peers
 clipshot history                # Show sync history
@@ -67,8 +67,8 @@ cargo build --release --no-default-features --features iroh  # Headless
 
 | Suite | Count | Command |
 |-------|-------|---------|
-| Rust unit | 1459 | `cargo test --lib` |
-| Vitest | 232 | `cd web && bun x vitest run` |
+| Rust unit | 1609 | `cargo test --lib` |
+| Vitest | 247 | `cd web && bun x vitest run` |
 | Docker API E2E | 43 | `npx playwright test --project=docker-api` |
 | Stress | 542 | `scripts/stress-test.sh 50` |
 

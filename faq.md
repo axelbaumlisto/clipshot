@@ -10,7 +10,7 @@ Clipshot watches your clipboard. When you copy text, a screenshot, or a file —
 
 ## Do I need an account to use Clipshot?
 
-No. On first launch, click **Use on local network only** — devices find each other via mDNS or local pair codes (`LOCAL_WORD_42`). An account adds cloud device discovery and relay for different networks, but it's optional.
+No. On first launch, click **Use on local network only** — devices find each other via mDNS. An account adds cloud device discovery and relay for different networks, but it's optional. You can also pair without an account using a 6-digit pair code — the pair flow works on LAN via mDNS even without Portal.
 
 ## Does my data go through your servers?
 
@@ -30,12 +30,12 @@ Everything your clipboard can hold: text (passwords, code, URLs), images (screen
 
 Three ways:
 
-1. **Local pair code** — one device generates `LOCAL_MOON_42`, the other enters it. Works on same network or over Tailscale/VPN. No account needed.
-2. **Portal pair code** — `BLUE-FISH-42`, works over the internet. Requires account.
-3. **One-liner install**:
+1. **Pair code** — one device generates a 6-digit code (e.g. `482 917`), the other enters it. Works on same network (mDNS) or over the internet (Portal relay). No account needed.
+2. **One-liner install**: pair at install time:
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=482917
 ```
+3. **Share URI** — `clipshot share-uri` generates a link; other device uses `clipshot add-uri 'clipshot://...'`.
 
 ## What if my devices are on different networks?
 
@@ -49,7 +49,7 @@ Clipshot keeps recent items in an outbox. When the device reconnects, it catches
 
 Yes. Run `clipshot daemon --port 19231` on any Linux server — no display required. One-liner install:
 ```bash
-curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=LOCAL_MOON_42 --addr=192.168.1.10:18080
+curl -fsSL https://clipshot.cc/install.sh | bash -s -- --code=482917
 ```
 
 ## What's the difference between Free and Pro?
