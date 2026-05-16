@@ -1,3 +1,58 @@
+## v0.8.22 — 2026-05-17
+
+### Peer relay connectivity (6 layers fixed)
+
+Connection through embedded peer relays now works end-to-end. Previously,
+behind-NAT nodes (`main`, `gene`) could not reach each other even when a
+publicly-routable peer (`spex`) was online with `relay-server` enabled —
+the relay address never made it from the publisher to the consumers.
+
+- **L1 — Relay DNS pre-resolved at startup**: relay URL is resolved once on
+  boot, so subsequent broadcasts never block on DNS even on Tailscale/VPN
+  paths where the resolver is unreachable.
+- **L2 — `headless` cargo feature includes `relay-server`**: every headless
+  daemon (CLI / server) can now act as a peer relay. Previously only GUI
+  builds shipped the relay, which broke server-as-relay topologies.
+- **L3 — `persist_hub_peer` stores `relay_addresses`**: relay addresses
+  advertised by other nodes via the hub are now persisted to the local
+  peer registry instead of being dropped after the WS frame is decoded.
+- **L4 — `persist_hub_peer` merges addresses** when a peer changes ports
+  / IPs, so we don't lose the relay entry on the next hub broadcast.
+- **L5 — `ping_peer_by_id` (no DNS, no relay lookup)**: HealthWorker now
+  pings peers by `EndpointId` and reuses the iroh path cache, fixing
+  health timeouts on Tailscale where DNS for `relay.clipshot.cc` is
+  blocked.
+- **L6 — Portal persists + broadcasts `relay_addresses`** (KEY FIX): the
+  hub previously hardcoded `relay_addresses: vec![]` in every `PeerList` /
+  `PeerJoined` message, so consumers never learned about the publisher's
+  relay even though the publisher reported it correctly. Migration 018
+  stores it; the WS layer now reads and broadcasts it.
+
+End result: `spex ✓ direct`, `main ✓ via spex relay`, `gene ✓ via spex relay`.
+
+### HealthWorker adaptive backoff
+
+Offline peers (e.g. Windows VM turned off) used to be pinged every 30 s
+forever — wasting CPU, flooding logs, and making the UI flap between ✓
+and `timeout`. Health probes now back off after sustained failure:
+
+| consecutive failures | next-probe wait |
+|----------------------|-----------------|
+| 0..3                 | 30 s (base)     |
+| 3..10                | 5 min           |
+| 10+                  | 15 min          |
+
+A successful probe — or a hub `peer_joined` event for that node — resets
+the counter, so a returning peer is rediscovered within one cycle
+(≤ 30 s) instead of waiting out the long backoff window. The 1–2-failure
+"flaky peer" guard is preserved by regression test.
+
+### Other
+
+- **macOS clipboard**: received files now write through `NSFilenamesPboardType`
+  so Finder paste works for transfers, not just text/images.
+
+
 ## v0.8.21 — 2026-05-13
 
 ### Unified Device Removal
