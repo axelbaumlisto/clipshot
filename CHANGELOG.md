@@ -1,3 +1,91 @@
+## v0.8.24 — 2026-05-20
+
+### Hub WS regression coverage + Mac production debug
+
+Completes the F-series begun in v0.8.23. The earlier release shipped
+the actual self-healing fixes (F1 connect timeout, F2 TCP keepalive,
+F6 boot-time peer-registry resync); v0.8.24 closes the remaining two
+items in the plan: a regression test for the production failure mode,
+and an on-Mac debug endpoint so the next incident is diagnosable
+without restarting the daemon with `--browser`.
+
+- **F4 — post-handshake silence integration test.** New
+  `test_post_handshake_silence_triggers_reconnect` in
+  `src/p2p/v2/hub/connection.rs::tests`. Spawns a mock WS server that
+  accepts the upgrade, reads Hello, then goes silent forever (exactly
+  the it.local 2026-05-20 failure mode). With `start_paused = true`,
+  the test advances tokio's virtual clock past the 120 s idle timeout
+  and asserts the daemon emits both `Connected` (handshake worked)
+  and `Disconnected` (silence detected, reconnect loop will retry).
+
+  Required one surgical source change to make the integration testable:
+  `connection.rs` now imports `tokio::time::Instant` instead of
+  `std::time::Instant`. The two are bit-identical in production
+  (both are monotonic-clock samples) but only the tokio variant
+  advances with `tokio::time::pause()` / `advance()`. No behavioural
+  change at runtime; substantial test-coverage win for the entire
+  heartbeat / idle / reconnect path.
+
+- **F5 — Mac Tauri test-hooks for `/api/status` + `/api/peers`.** New
+  routes in the existing `CLIPSHOT_TEST_HOOKS` server in
+  `src/gui/tauri_app.rs`:
+    - `GET /api/test/status` → cached `DaemonStatusFull` JSON
+    - `GET /api/test/peers`  → cached `Vec<FullPeerInfo>` JSON
+  Both read from `crate::p2p::control::cache` — the same source the
+  production `/api/status` and `/api/peers` HTTP routes serve. Mac
+  Tauri-GUI mode does not bind `tiny_http` on 15282 unless
+  `use_browser_ui = true`; with `CLIPSHOT_TEST_HOOKS=1` (default port
+  18181) operators can now `curl http://127.0.0.1:18181/api/test/status`
+  on it.local to diagnose hub / peer state without restarting the
+  app or enabling the full browser-mode HTTP API. Tests assert
+  GET-only and route-string distinctness.
+
+### Notes
+
+- 1517 lib tests (1514 → 1517, +3 new for F5 route predicates plus
+  the F4 integration test).
+- No new runtime dependencies.
+
+## v0.8.23 — 2026-05-20
+
+### Hub WebSocket self-healing (production incident 2026-05-20)
+
+it.local Mac daemon stalled for 4+ hours with a single ESTABLISHED TCP
+socket to the portal and zero TLS handshakes completing. The reconnect
+loop was blocked inside `tokio_tungstenite::connect_async_tls_with_config`
+because the call had no timeout and inherited the OS-default TCP timeout
+(effectively unbounded on macOS without keepalive).
+
+Three-layer fix:
+
+- **F1 — connect timeout (15 s).** Wraps the WS handshake in
+  `tokio::time::timeout` so a stalled handshake aborts within seconds
+  and the existing exponential backoff retries from scratch.
+  Tests: `test_connect_timeout_is_bounded_for_half_open_resilience`,
+  `test_stalled_tls_handshake_does_not_hang_forever`.
+
+- **F2 — TCP keepalive (30/10/3).** New `src/p2p/v2/hub/keepalive.rs`
+  module opens TCP via `socket2`, arms `SO_KEEPALIVE` +
+  `TCP_KEEPALIVE*`, then hands the socket to tungstenite. Worst-case
+  half-open detection on Linux: 60 s. macOS lacks
+  `TCP_KEEPINTVL`/`TCP_KEEPCNT` so it falls back to the application-level
+  120 s idle timeout already in `run_loop`.
+  New dep: `socket2 = "0.5"`. Tests: 6 in `keepalive::tests`.
+
+- **F6 — boot-time peer-registry resync.** New
+  `AsyncDaemon::apply_authoritative_iroh_addr` collapses
+  `peer_registry.addresses[]` to the single hub-authoritative iroh addr
+  on every `ProcessPeerList` / `ProcessPeerJoined` / `PeerNodeAddrChanged`
+  event. Eliminates the address accumulation that previously left
+  daemons trying dead UDP ports on the first reconnect attempt.
+  Tests: 4 in `apply_authoritative_iroh_addr_*`.
+
+### Other
+
+- Pinned `socket2 = "0.5"` with feature `all` for cross-platform
+  TCP keepalive accessors.
+
+Net change: 1513 lib tests (1497 → 1513, +16 new). All pass.
 ## v0.8.22 — 2026-05-17
 
 ### Peer relay connectivity (6 layers fixed)
