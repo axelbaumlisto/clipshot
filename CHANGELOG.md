@@ -1,8 +1,31 @@
-## v0.9.0 — 2026-05-21
+## v0.8.42 — 2026-05-21
+
+### macOS clipboard priority fix
+
+Copying a file in Finder (Cmd+C) now syncs the **real file** instead of
+the file's icon preview. Previously, Finder ships file URL + PNG icon
+in the pasteboard simultaneously, and `MacOSClipboard::get_content`
+picked the image (always present) before the file URL — resulting in a
+153 KB icon being synced instead of the 1.2 MB JSON the user actually
+selected.
+
+Fixed by extracting the priority into a pure-policy module
+`src/clipboard/macos_priority.rs`:
+
+  ```text
+  v0.8.41:  Image > Files > Text  ❌
+  v0.8.42:  Files > Image > Text  ✓
+  ```
+
+SOLID / TDD: 6 RED-first unit tests for the priority function cover the
+exact regression case (`finder_file_copy_picks_files_not_image_or_text`)
+plus the five neighbouring cases (screenshot, plain text, image+alt,
+empty, files+text).
+
 
 ### Transport resilience unified — single LivenessSupervisor
 
-Major architecture change: replaces six independent watchdog mechanisms
+Internal refactor (no breaking changes u2014 patch bump): replaces six independent watchdog mechanisms
 (hub-WS idle timeout, F1 connect timeout, tick-stall watchdog,
 `iroh_listener_dead` flag + accept-loop detection, `HealthWorker`
 poll loop, ad-hoc reconnect commands) with one primitive — see
