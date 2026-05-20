@@ -1,3 +1,76 @@
+## v0.9.0 — 2026-05-21
+
+### Transport resilience unified — single LivenessSupervisor
+
+Major architecture change: replaces six independent watchdog mechanisms
+(hub-WS idle timeout, F1 connect timeout, tick-stall watchdog,
+`iroh_listener_dead` flag + accept-loop detection, `HealthWorker`
+poll loop, ad-hoc reconnect commands) with one primitive — see
+[`plans/transport-resilience-unified.md`](plans/transport-resilience-unified.md).
+
+#### What's new
+
+- **`src/p2p/v2/transport_health/`**:
+  - `Heartbeat` + `Restartable` traits (`async_trait`, object-safe)
+  - `Policy` struct (single `tick_interval` + `probe_timeout` +
+    `consecutive_failures_before_restart` + `cool_down_after_restart`,
+    matched to v0.8.24 production tuning by default)
+  - `LivenessSupervisor` + `SupervisorMetrics` (`OnceLock` global)
+  - 3 concrete adapters:
+    - `HubWsChannel` — observes `HubClient::last_recv` + signals
+      reconnect via `HubClient::request_reconnect`
+    - `IrohRelayChannel` — absorbs `iroh_listener_dead` flag into the
+      unified API
+    - `IrohPeerChannel` — naturalises `HealthState::failures` (one
+      channel per peer; escalates only at chronic failure count)
+- **`GET /api/test/transport_health`** — single unified diagnostic
+  surface (HTTP API + Mac Tauri test-hooks at port 18181). Replaces 4
+  legacy endpoints (`/api/status:hub_connected`, `/api/peers:latency_ms`,
+  `iroh_listener_dead` flag, journalctl scraping).
+
+#### What got removed
+
+- `HubClient::run_loop` inline `idle_timeout = 120 s` check (now
+  owned by the supervisor's `Policy`)
+- F1's standalone `CONNECT_TIMEOUT` constant is now scoped to the
+  connect call only (no longer a public knob)
+
+#### Tests
+
+- `cargo test --lib`: 1517 → **1548** (+31 new tests)
+- New `tests/e2e/scripts/transport-chaos/` Docker chaos suite:
+  - C1 udp-blackhole-peer
+  - C2 sleep-wake
+  - C3 relay-restart
+  - C4 hub-blackhole
+  - C5 multipath-confusion
+  - C6 portal-restart
+  - C7 24-h passive soak (scheduled CI weekly)
+- New `.github/workflows/transport-chaos.yml` runs C1-C6 fast (≤10 min)
+  on every push touching transport code; C7 runs Sundays 02:00 UTC.
+
+#### SOLID/DRY/KISS pay-off
+
+- **SRP**: probe / classify / decide-restart are now three separate
+  concerns in three different layers (`HealthState`/`HubClient` →
+  adapters → `LivenessSupervisor`).
+- **DRY**: 86 grep hits on watchdog/idle_timeout/CONNECT_TIMEOUT/
+  last_alive across `src/p2p/v2/` in v0.8.24, down to ≤ 12 hits in
+  v0.9.0 — all inside `transport_health/`.
+- **KISS**: adding a new transport (future BLE, WebTransport, …)
+  requires implementing only `Heartbeat + Restartable` — no edits to
+  the supervisor, no new global constants, no new timeout knobs.
+- **TDD-strict**: every T-step (T0-T7) was a discrete commit, each
+  leaving the tree green. RED scenarios committed at T1 before any
+  supervisor existed; each subsequent T-step turned a defined subset
+  green.
+
+### Carry-over from v0.8.24
+
+- F4 regression test rewritten as `test_request_reconnect_breaks_inner_loop`
+  (supervisor-level behaviour moved to chaos C4).
+- F5 test-hooks endpoints (`/api/test/status`, `/api/test/peers`) kept.
+
 ## v0.8.24 — 2026-05-20
 
 ### Hub WS regression coverage + Mac production debug
